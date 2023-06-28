@@ -185,6 +185,9 @@ export default function FormComp() {
       <h4>
         Not Registered? <a href="/register">Register</a>
       </h4>
+      <h4>
+        <a href="/forgotpassword">Forgot Password?</a>
+      </h4>
     </Box>
   );
 }
