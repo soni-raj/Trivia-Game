@@ -1,0 +1,11 @@
+.email-field {
+  width: 100%;
+}
+.form,
+.right-div {
+  font-family: "Roboto";
+}
+.button-container {
+  /* width: 100%; */
+  margin-bottom: 1rem; /* Add margin-bottom to create space */
+}
