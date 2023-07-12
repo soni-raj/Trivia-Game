@@ -1,6 +1,6 @@
 import "./registerPage.css";
 import React from "react";
-import FormComp from "../../Components/register/form/formComp";
+import RegisterFormComp from "../../Components/register/registerForm/registerFormComp";
 
 function RegisterPage() {
   return (
@@ -15,7 +15,7 @@ function RegisterPage() {
               </span>{" "}
             </h1>
 
-            <FormComp />
+            <RegisterFormComp />
           </div>
         </div>
         {/* <div className="register-right-div">

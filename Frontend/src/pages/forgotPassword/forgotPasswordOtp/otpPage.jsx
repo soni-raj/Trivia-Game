@@ -1,21 +1,20 @@
-import "./loginPage.css";
 import React from "react";
-import LoginFormComp from "../../Components/login/form/loginFormComp";
 
-function LoginPage() {
+import OtpComponent from "../../../Components/forgotPassword/forgotPasswordOtp/otpComponent";
+function ConfirmOtpPage() {
   return (
     <div className="login">
       <div className="login-container">
         <div className="login-left-div">
           <div className="login-form">
             <h1 className="login-form-header">
-              LOG{" "}
-              <span style={{ marginLeft: "2px", color: "#5C469C" }}>IN</span>
+              Enter {"  "}
+              <span style={{ marginLeft: "2px", color: "#5C469C" }}>OTP</span>
             </h1>
 
             {/* <h2 className="form-header-sub"></h2> */}
 
-            <LoginFormComp />
+            <OtpComponent />
           </div>
         </div>
         {/* <div className="login-right-div">
@@ -26,4 +25,4 @@ function LoginPage() {
   );
 }
 
-export default LoginPage;
+export default ConfirmOtpPage;
