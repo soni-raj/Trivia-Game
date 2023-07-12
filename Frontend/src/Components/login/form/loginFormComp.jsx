@@ -3,29 +3,32 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import "./formComp.css";
 import Button from "@mui/material/Button";
+import { SiGoogle, SiFacebook } from "react-icons/si";
 import IconButton from "@mui/material/IconButton";
+
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
 import InputAdornment from "@mui/material/InputAdornment";
+import { useNavigate } from "react-router-dom";
 import FormControl from "@mui/material/FormControl";
+
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import { useNavigate } from "react-router-dom";
 import { FormHelperText } from "@mui/material";
-import { SiGoogle, SiFacebook } from "react-icons/si";
-
-export default function FormComp() {
+import {
+  AuthenticationDetails,
+  CognitoUser,
+  CognitoUserPool,
+} from "amazon-cognito-identity-js";
+import awsCognitoCredentials from "../../../utils/cognitoCredentials";
+export default function LoginFormComp() {
   const [showPassword, setShowPassword] = useState(false);
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isFirstNameValid, setIsFirstNameValid] = useState(true);
-  const [isLastNameValid, setIsLastNameValid] = useState(true);
   const [isEmailValid, setIsEmailValid] = useState(true);
   const [isPasswordValid, setIsPasswordValid] = useState(true);
-
   const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const handleClickShowPassword = () => {
     setShowPassword((show) => !show);
@@ -37,49 +40,52 @@ export default function FormComp() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
-    console.log("in handle submit...");
-    setIsFirstNameValid(!!firstName);
-    setIsLastNameValid(!!lastName);
     setIsEmailValid(!!email);
     setIsPasswordValid(!!password);
 
-    if (!firstName || !lastName || !email || !password) {
+    if (!email || !password) {
       return;
     }
 
-    if (!isValidEmail(email)) {
-      setIsEmailValid(false);
-      return;
-    }
+    // Create a new CognitoUser instance
+    const userPool = new CognitoUserPool(awsCognitoCredentials);
+    const user = new CognitoUser({
+      Username: email,
+      Pool: userPool,
+    });
 
-    if (!isValidPassword(password)) {
-      setIsPasswordValid(false);
-      return;
-    }
+    // Create AuthenticationDetails object
+    const authenticationDetails = new AuthenticationDetails({
+      Username: email,
+      Password: password,
+    });
 
-    // Form submission successful
-    console.log("Form submitted:", { firstName, lastName, email, password });
+    // Perform user login
+    user.authenticateUser(authenticationDetails, {
+      onSuccess: (session) => {
+        alert("Login Success ");
+        // Access token, ID token, and refresh token
+        const accessToken = session.getAccessToken().getJwtToken();
+        const idToken = session.getIdToken().getJwtToken();
+        const refreshToken = session.getRefreshToken().getToken();
+        localStorage.setItem("email", email);
+        // Reset form fields
+        setEmail("");
+        setPassword("");
+
+        // Redirect to the desired page
+        navigate("/loginchecksecurityquestionPage");
+      },
+      onFailure: (err) => {
+        alert("Wrong Password");
+        console.error("Login error", err);
+      },
+    });
     // Reset form fields
-    setFirstName("");
-    setLastName("");
     setEmail("");
     setPassword("");
-    setIsFirstNameValid(true);
-    setIsLastNameValid(true);
     setIsEmailValid(true);
     setIsPasswordValid(true);
-    navigate("/login");
-  };
-
-  const isValidEmail = (value) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(value);
-  };
-
-  const isValidPassword = (value) => {
-    console.log("In is pass:", value, value.length);
-    return value.length >= 8;
   };
 
   return (
@@ -93,7 +99,6 @@ export default function FormComp() {
       onSubmit={handleSubmit}
     >
       <div className="form">
-        {/* Sign in with Google button */}
         <div className="button-container">
           {/* Sign in with Google button */}
           <Button
@@ -102,7 +107,7 @@ export default function FormComp() {
             onClick={() => console.log("Sign in with Google clicked")}
             sx={{ mr: "1rem" }} // Add margin-right of 1rem
           >
-            Sign in with Google
+            Log in with Google
           </Button>
 
           {/* Sign in with Facebook button */}
@@ -112,38 +117,9 @@ export default function FormComp() {
             onClick={() => console.log("Sign in with Facebook clicked")}
             sx={{ ml: "1rem" }}
           >
-            Sign in with Facebook
+            Log in with Facebook
           </Button>
         </div>
-
-        <TextField
-          required
-          id="outlined-required"
-          placeholder="First Name"
-          label="First Name"
-          type="text"
-          InputLabelProps={{
-            shrink: true,
-          }}
-          value={firstName}
-          onChange={(event) => setFirstName(event.target.value)}
-          error={!isFirstNameValid}
-          helperText={!isFirstNameValid && "Please enter your first name"}
-        />
-        <TextField
-          required
-          id="outlined-required"
-          placeholder="Last Name"
-          label="Last Name"
-          type="text"
-          InputLabelProps={{
-            shrink: true,
-          }}
-          value={lastName}
-          onChange={(event) => setLastName(event.target.value)}
-          error={!isLastNameValid}
-          helperText={!isLastNameValid && "Please enter your last name"}
-        />
         <TextField
           required
           id="outlined-required"
@@ -227,7 +203,10 @@ export default function FormComp() {
         Submit
       </Button>
       <h4>
-        Already Registered? <a href="/login">Login</a>
+        Not Registered? <a href="/register">Register </a>
+      </h4>
+      <h4>
+        <a href="/forgotpassword">Forgot Password?</a>
       </h4>
     </Box>
   );

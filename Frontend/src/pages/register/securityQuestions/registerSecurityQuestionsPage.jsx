@@ -1,21 +1,22 @@
-import "./loginPage.css";
 import React from "react";
-import LoginFormComp from "../../Components/login/form/loginFormComp";
 
-function LoginPage() {
+import RegisterSecurityQuestion from "../../../Components/register/registerSecurityQuestions/registerSecurityQuestionsComponent";
+function RegisterSecurityQuestionPage() {
   return (
     <div className="login">
       <div className="login-container">
         <div className="login-left-div">
           <div className="login-form">
             <h1 className="login-form-header">
-              LOG{" "}
-              <span style={{ marginLeft: "2px", color: "#5C469C" }}>IN</span>
+              2 Factor{"  "}
+              <span style={{ marginLeft: "2px", color: "#5C469C" }}>
+                Authenticaton
+              </span>
             </h1>
 
             {/* <h2 className="form-header-sub"></h2> */}
 
-            <LoginFormComp />
+            <RegisterSecurityQuestion />
           </div>
         </div>
         {/* <div className="login-right-div">
@@ -26,4 +27,4 @@ function LoginPage() {
   );
 }
 
-export default LoginPage;
+export default RegisterSecurityQuestionPage;
