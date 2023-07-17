@@ -12,7 +12,15 @@ import RegisterOtpPage from "./pages/register/registerOtp/registerOtpPage";
 
 import ForgotPasswordPage from "./pages/forgotPassword/forgotPassword";
 import ConfirmOtpPage from "./pages/forgotPassword/forgotPasswordOtp/otpPage";
+
+import UserTeams from "./pages/teamManagement/userTeams";
+import TeamStatistics from "./pages/teamManagement/teamStatistics";
+import TeamManagement from "./pages/teamManagement/manageTeam";
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 import App from "./app";
+
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -34,6 +42,13 @@ root.render(
         {/* Updated component name */}
         <Route path="/confirmotp" element={<ConfirmOtpPage />} />
       </Route>
+
+      {/* FEATURE 3: TEAM MANAGEMENT ROUTES */}
+      <Route path="/user-teams" element={< UserTeams/>} />
+      <Route path="/team-statistics" element={< TeamStatistics/>} />
+      <Route path="/team-management" element={< TeamManagement/>} />
+
+
     </Routes>
   </BrowserRouter>
 );
