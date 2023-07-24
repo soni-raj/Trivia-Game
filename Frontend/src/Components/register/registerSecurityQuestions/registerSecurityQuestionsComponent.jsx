@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-
+import { TRIVIA_SAVE_DATA } from "../../../utils/apiUrls";
 const theme = createTheme();
 function RegisterSecurityQuestion() {
   const location = useLocation();
@@ -19,22 +19,20 @@ function RegisterSecurityQuestion() {
   const email = location.state.email;
   const firstname = location.state.firstName;
   const lastname = location.state.lastName;
+  console.log(firstname);
+  console.log(lastname);
 
   function onSubmit(event) {
     event.preventDefault();
 
     axios
-      .post(
-        "https://us-central1-serverless-391002.cloudfunctions.net/api/storeUserData",
-        {
-          firstname: firstname,
-          lastname: lastname,
-          email: email,
-          ans1: answer1,
-          ans2: answer2,
-          key: parseInt(randomNumber),
-        }
-      )
+      .post(TRIVIA_SAVE_DATA, {
+        firstname: firstname,
+        lastname: lastname,
+        email: email,
+        ans1: answer1,
+        ans2: answer2,
+      })
       .then((res) => {
         console.log(res);
         navigate("/");

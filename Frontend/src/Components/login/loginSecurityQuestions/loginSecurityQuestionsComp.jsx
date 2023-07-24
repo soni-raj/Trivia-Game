@@ -13,8 +13,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-// Reference: https://github.com/mui/material-ui/blob/v5.8.6/docs/data/material/getting-started/templates/sign-in/SignIn.js
-
+import { TRIVIA_CHECK_DATA } from "../../../utils/apiUrls";
 const theme = createTheme();
 
 export default function LoginSecurityQuestionsComp() {
@@ -35,8 +34,7 @@ export default function LoginSecurityQuestionsComp() {
     console.log(a1);
     console.log(a2);
     try {
-      const url =
-        "https://us-central1-serverless-391002.cloudfunctions.net/api/checkUserData";
+      const url = TRIVIA_CHECK_DATA;
       const email = localStorage.getItem("email");
       const response = await axios.post(url, {
         email: email,

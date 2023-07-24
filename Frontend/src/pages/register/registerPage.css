@@ -24,6 +24,10 @@
   width: 100%;
   letter-spacing: 3px; /* Adjust the spacing as desired */
 }
+.register-form-title {
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  letter-spacing: 3px;
+}
 
 .register-form-header-sub {
   opacity: 0.8;
