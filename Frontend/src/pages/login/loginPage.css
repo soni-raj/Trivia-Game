@@ -20,6 +20,10 @@
   width: 100%;
   letter-spacing: 3px; /* Adjust the spacing as desired */
 }
+.login-form-title {
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  font-size: xx-large;
+}
 
 .form-header-sub {
   opacity: 0.8;

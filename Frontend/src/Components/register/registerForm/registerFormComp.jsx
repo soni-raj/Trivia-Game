@@ -13,14 +13,10 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useNavigate } from "react-router-dom";
 import { FormHelperText } from "@mui/material";
 import { SiGoogle, SiFacebook } from "react-icons/si";
-import awsCognitoCredentials from "../../../utils/cognitoCredentials";
-import {
-  CognitoUserPool,
-  CognitoUserAttribute,
-} from "amazon-cognito-identity-js";
-
-const userPool = new CognitoUserPool(awsCognitoCredentials);
-
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../../utils/firebase";
+// You can get the current config object
+// const currentConfig = Auth.configure();
 export default function RegisterFormComp() {
   const [showPassword, setShowPassword] = useState(false);
   const [firstName, setFirstName] = useState("");
@@ -68,41 +64,33 @@ export default function RegisterFormComp() {
     // Form submission successful
     console.log("Form submitted:", { firstName, lastName, email, password });
     try {
-      const attributeList = [
-        new CognitoUserAttribute({ Name: "email", Value: email }),
-        new CognitoUserAttribute({ Name: "given_name", Value: firstName }),
-        new CognitoUserAttribute({ Name: "family_name", Value: lastName }),
-      ];
-      const signUp = (email, password, attributeList) => {
-        return new Promise((resolve, reject) => {
-          userPool.signUp(email, password, attributeList, null, (err, data) => {
-            if (err) {
-              reject(err);
-            } else {
-              navigate("/registerotp", {
-                state: { email, firstName, lastName },
-              });
-            }
+      createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          // Signed in
+          const user = userCredential.user;
+          console.log(user);
+
+          // Reset form fields
+          setFirstName("");
+          setLastName("");
+          setEmail("");
+          setPassword("");
+          setIsFirstNameValid(true);
+          setIsLastNameValid(true);
+          setIsEmailValid(true);
+          setIsPasswordValid(true);
+
+          // Navigate to "/QNA" after successful registration and pass data as state
+          navigate("/registersecurityquestion", {
+            state: { email, firstName, lastName, password },
           });
+        })
+        .catch((error) => {
+          // Handle error
         });
-      };
-      await signUp(email, password, attributeList);
-
-      // Reset form fields
-      // ...
     } catch (error) {
-      console.error(error);
+      // Handle error
     }
-
-    // Reset form fields
-    setFirstName("");
-    setLastName("");
-    setEmail("");
-    setPassword("");
-    setIsFirstNameValid(true);
-    setIsLastNameValid(true);
-    setIsEmailValid(true);
-    setIsPasswordValid(true);
   };
 
   const isValidEmail = (value) => {
@@ -132,7 +120,7 @@ export default function RegisterFormComp() {
           <Button
             variant="outlined"
             startIcon={<SiGoogle />}
-            onClick={() => console.log("Sign in with Google clicked")}
+            // onClick={() => Auth.federatedSignIn({ provider: "facebook" })}
             sx={{ mr: "1rem" }} // Add margin-right of 1rem
           >
             Sign in with Google
@@ -142,7 +130,7 @@ export default function RegisterFormComp() {
           <Button
             variant="outlined"
             startIcon={<SiFacebook />}
-            onClick={() => console.log("Sign in with Facebook clicked")}
+            // onClick={() => Auth.federatedSignIn({ provider: "facebook" })}
             sx={{ ml: "1rem" }}
           >
             Sign in with Facebook
@@ -155,7 +143,7 @@ export default function RegisterFormComp() {
           placeholder="First Name"
           label="First Name"
           type="text"
-          InputLabelProps={{
+          inputLabelProps={{
             shrink: true,
           }}
           value={firstName}
@@ -169,7 +157,7 @@ export default function RegisterFormComp() {
           placeholder="Last Name"
           label="Last Name"
           type="text"
-          InputLabelProps={{
+          inputLabelProps={{
             shrink: true,
           }}
           value={lastName}
@@ -183,7 +171,7 @@ export default function RegisterFormComp() {
           placeholder="xyz@gmail.com"
           label="Email"
           type="email"
-          InputLabelProps={{
+          inputLabelProps={{
             shrink: true,
           }}
           value={email}
@@ -205,7 +193,7 @@ export default function RegisterFormComp() {
         >
           <InputLabel
             htmlFor="outlined-adornment-password"
-            InputLabelProps={{
+            inputLabelProps={{
               shrink: true,
             }}
           >

@@ -3,9 +3,9 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import "./formComp.css";
 import Button from "@mui/material/Button";
-import axios from "axios";
+import { sendPasswordResetEmail } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-
+import { auth } from "../../utils/firebase";
 export default function ForgotPassword() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -29,26 +29,18 @@ export default function ForgotPassword() {
 
     // Form submission successful
     try {
-      const url =
-        "https://us-central1-serverless-391002.cloudfunctions.net/api/initiateResetPassword";
-      const email = localStorage.getItem("email");
-      const response = await axios.post(url, {
-        username: email,
-      });
-      console.log(response.status == 200);
-      if (response.status == 200) {
-        alert("Email Sent!!!");
-        // route to cipher
-        navigate("/confirmOtp", {
-          state: {
-            email,
-          },
+      sendPasswordResetEmail(auth, email)
+        .then(() => {
+          alert(
+            "A verification code has been sent to your email address for verification."
+          );
+          navigate("/login", {});
+        })
+        .catch((err) => {
+          alert("The email provided does not exist in our records.");
         });
-      } else {
-        alert("Email Doesn't Exist");
-      }
     } catch (err) {
-      alert("Some other Error");
+      alert("Server Error");
     }
 
     // Reset form fields
@@ -78,7 +70,7 @@ export default function ForgotPassword() {
         <TextField
           required
           id="outlined-required"
-          placeholder="xyz@gmail.com"
+          placeholder="Enter your Email Address"
           label="Email"
           type="email"
           InputLabelProps={{

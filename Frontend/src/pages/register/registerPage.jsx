@@ -6,6 +6,11 @@ function RegisterPage() {
   return (
     <div className="register">
       <div className="register-container">
+        <h1 className="register-form-title">
+          WELCOME TO{" "}
+          <span style={{ marginLeft: "2px", color: "#5C469C" }}>TRIVIA</span>{" "}
+          GAME
+        </h1>
         <div className="register-left-div">
           <div className="register-form">
             <h1 className="register-form-header">
