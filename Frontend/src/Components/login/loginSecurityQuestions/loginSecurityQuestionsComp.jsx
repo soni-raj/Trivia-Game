@@ -12,8 +12,10 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 import { TRIVIA_CHECK_DATA } from "../../../utils/apiUrls";
+import { useState } from "react";
 const theme = createTheme();
 
 export default function LoginSecurityQuestionsComp() {
@@ -25,9 +27,17 @@ export default function LoginSecurityQuestionsComp() {
   );
   const [a1, SetA1] = React.useState("");
   const [a2, SetA2] = React.useState("");
-
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
   let navigate = useNavigate();
+  const handleSnackbarOpen = (message) => {
+    setSnackbarMessage(message);
+    setSnackbarOpen(true);
+  };
 
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -43,14 +53,20 @@ export default function LoginSecurityQuestionsComp() {
       });
       console.log(response.status == 200);
       if (response.status == 200) {
-        alert("Provided answers are right. Sweet success!!!");
+        handleSnackbarOpen(
+          "sucess 2 Step Authentication Successful. Redirecting..."
+        );
         // route to cipher
         navigate("/");
       } else {
-        alert("Provided answers are wrong. Please check again");
+        handleSnackbarOpen(
+          "failed Provided answers are wrong. Please check again"
+        );
       }
     } catch (err) {
-      alert("Provided answers are wrong. Please check again");
+      handleSnackbarOpen(
+        "failed Provided answers are wrong. Please check again"
+      );
     }
   };
 
@@ -126,6 +142,24 @@ export default function LoginSecurityQuestionsComp() {
               </Grid>
             </Grid>
           </Box>
+          <Snackbar
+            open={snackbarOpen}
+            autoHideDuration={3000}
+            onClose={handleSnackbarClose}
+            anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          >
+            <Alert
+              onClose={handleSnackbarClose}
+              severity={
+                snackbarMessage.trim().split(" ")[0] === "success"
+                  ? "success"
+                  : "error"
+              }
+              sx={{ width: "100%" }}
+            >
+              {snackbarMessage}
+            </Alert>
+          </Snackbar>
         </Box>
       </Container>
     </ThemeProvider>

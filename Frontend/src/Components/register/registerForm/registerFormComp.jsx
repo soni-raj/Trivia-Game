@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
+import { useTheme } from "@mui/material/styles";
 import "./formComp.css";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
@@ -15,9 +16,48 @@ import { FormHelperText } from "@mui/material";
 import { SiGoogle, SiFacebook } from "react-icons/si";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../../utils/firebase";
-// You can get the current config object
-// const currentConfig = Auth.configure();
+import { CHECK_EMAIL_EXIST } from "../../../utils/apiUrls";
+import Snackbar from "@mui/material/Snackbar";
+
+import MenuItem from "@mui/material/MenuItem";
+import Alert from "@mui/material/Alert";
+import Select from "@mui/material/Select";
+import axios from "axios";
+import {
+  FacebookAuthProvider,
+  signInWithPopup,
+  GoogleAuthProvider,
+} from "firebase/auth";
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+
+const roles = ["Player", "Host"];
+
+function getStyles(name, role, theme) {
+  return {
+    fontWeight:
+      role.indexOf(name) === -1
+        ? theme.typography.fontWeightRegular
+        : theme.typography.fontWeightMedium,
+  };
+}
+
+const providerFacebook = new FacebookAuthProvider();
+const providerGoogle = new GoogleAuthProvider();
 export default function RegisterFormComp() {
+  const theme = useTheme();
+  const [role, setRole] = React.useState("");
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -36,6 +76,14 @@ export default function RegisterFormComp() {
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
+  };
+  const handleSnackbarOpen = (message) => {
+    setSnackbarMessage(message);
+    setSnackbarOpen(true);
+  };
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
   };
 
   const handleSubmit = async (event) => {
@@ -60,12 +108,17 @@ export default function RegisterFormComp() {
       setIsPasswordValid(false);
       return;
     }
-
+    if (role === "") {
+      setSnackbarOpen(true);
+      handleSnackbarOpen("Failed Please Select a Role");
+      return;
+    }
     // Form submission successful
     console.log("Form submitted:", { firstName, lastName, email, password });
     try {
       createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
+          handleSnackbarOpen("Success Redirecting...");
           // Signed in
           const user = userCredential.user;
           console.log(user);
@@ -79,18 +132,125 @@ export default function RegisterFormComp() {
           setIsLastNameValid(true);
           setIsEmailValid(true);
           setIsPasswordValid(true);
-
+          localStorage.setItem("email", email);
+          localStorage.setItem("role", role);
           // Navigate to "/QNA" after successful registration and pass data as state
           navigate("/registersecurityquestion", {
-            state: { email, firstName, lastName, password },
+            state: { email, firstName, lastName, password, role },
           });
         })
         .catch((error) => {
-          // Handle error
+          handleSnackbarOpen("Failed this Email Already Exist...");
         });
     } catch (error) {
       // Handle error
     }
+  };
+  const handleGoogleLogin = () => {
+    signInWithPopup(auth, providerGoogle)
+      .then((result) => {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential.accessToken;
+        // The signed-in user info.
+
+        let email = result.user.email;
+        let name = result.user.displayName.split(" ");
+        let firstName = name[0];
+        let lastName = name[1];
+
+        console.log(result.user);
+
+        // Check if the email already exists in your backend using Axios
+        axios
+          .post(CHECK_EMAIL_EXIST, { email })
+          .then((response) => {
+            if (response.status === 200) {
+              // Email already exists, save it in session and navigate to login check security question page
+              localStorage.setItem("email", email);
+              localStorage.setItem("role", role);
+              navigate("/loginchecksecurityquestionPage");
+            } else {
+            }
+          })
+          .catch((error) => {
+            navigate("/registersecurityquestion", {
+              state: {
+                email,
+                firstName,
+                lastName,
+              },
+            });
+          });
+      })
+      .catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.customData.email;
+        // The AuthCredential type that was used.
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        // ...
+      });
+  };
+
+  const handleFacebookLogin = () => {
+    signInWithPopup(auth, providerFacebook)
+      .then((result) => {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        const credential = FacebookAuthProvider.credentialFromResult(result);
+        const token = credential.accessToken;
+        // The signed-in user info.
+
+        let email = result.user.email;
+        let name = result.user.displayName.split(" ");
+        let firstName = name[0];
+        let lastName = name[1];
+
+        console.log(result.user);
+
+        // Check if the email already exists in your backend using Axios
+        axios
+          .post(CHECK_EMAIL_EXIST, { email })
+          .then((response) => {
+            if (response.status === 200) {
+              // Email already exists, save it in session and navigate to login check security question page
+              localStorage.setItem("email", email);
+              localStorage.setItem("role", role);
+              navigate("/loginchecksecurityquestionPage");
+            } else {
+            }
+          })
+          .catch((error) => {
+            navigate("/registersecurityquestion", {
+              state: {
+                email,
+                firstName,
+                lastName,
+              },
+            });
+          });
+      })
+      .catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.customData.email;
+        // The AuthCredential type that was used.
+        const credential = FacebookAuthProvider.credentialFromError(error);
+        // ...
+      });
+  };
+  const handleChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setRole(
+      // On autofill we get a stringified value.
+      typeof value === "string" ? value.split(",") : value
+    );
   };
 
   const isValidEmail = (value) => {
@@ -120,7 +280,7 @@ export default function RegisterFormComp() {
           <Button
             variant="outlined"
             startIcon={<SiGoogle />}
-            // onClick={() => Auth.federatedSignIn({ provider: "facebook" })}
+            onClick={handleGoogleLogin}
             sx={{ mr: "1rem" }} // Add margin-right of 1rem
           >
             Sign in with Google
@@ -130,7 +290,7 @@ export default function RegisterFormComp() {
           <Button
             variant="outlined"
             startIcon={<SiFacebook />}
-            // onClick={() => Auth.federatedSignIn({ provider: "facebook" })}
+            onClick={handleFacebookLogin}
             sx={{ ml: "1rem" }}
           >
             Sign in with Facebook
@@ -227,6 +387,55 @@ export default function RegisterFormComp() {
           </FormHelperText>
         </FormControl>
       </div>
+      <FormControl sx={{ m: 1, width: 465 }}>
+        <Select
+          displayEmpty
+          value={role}
+          onChange={handleChange}
+          input={<OutlinedInput />}
+          renderValue={(selected) => {
+            if (selected.length === 0) {
+              return <em>Roles</em>;
+            }
+
+            return selected;
+          }}
+          MenuProps={MenuProps}
+          inputProps={{ "aria-label": "Without label" }}
+        >
+          <MenuItem disabled value="">
+            <em>Roles</em>
+          </MenuItem>
+          {roles.map((name) => (
+            <MenuItem
+              key={name}
+              value={name}
+              style={getStyles(name, role, theme)}
+            >
+              {name}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+      {/* Snackbar to show success or error message */}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          severity={
+            snackbarMessage.trim().split(" ")[0] === "success"
+              ? "success"
+              : "error"
+          }
+          sx={{ width: "100%" }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
       <Button
         variant="contained"
         type="submit"
