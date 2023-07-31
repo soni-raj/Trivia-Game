@@ -8,8 +8,7 @@ import LoginCheckSecurityQuestionPage from "./pages/login/loginSecurityQuestions
 
 import RegisterPage from "./pages/register/registerPage";
 import RegisterSecurityQuestionPage from "./pages/register/securityQuestions/registerSecurityQuestionsPage";
-// import RegisterOtpPage from "./pages/register/registerOtp/registerOtpPage";
-
+import EditProfilePage from "./pages/editProfile/editProfilePage";
 import ForgotPasswordPage from "./pages/forgotPassword/forgotPassword";
 // import ConfirmOtpPage from "./pages/forgotPassword/forgotPasswordOtp/otpPage";
 import App from "./app";
@@ -25,7 +24,7 @@ root.render(
           element={<LoginCheckSecurityQuestionPage />}
         />
         <Route path="/register" element={<RegisterPage />} />
-        {/* <Route path="/registerotp" element={<RegisterOtpPage />} />{" "} */}
+        <Route path="/editprofile" element={<EditProfilePage />} />
         <Route
           path="/registersecurityquestion"
           element={<RegisterSecurityQuestionPage />}

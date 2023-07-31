@@ -19,9 +19,8 @@ import { auth } from "../../../utils/firebase";
 import { CHECK_EMAIL_EXIST } from "../../../utils/apiUrls";
 import Snackbar from "@mui/material/Snackbar";
 
-import MenuItem from "@mui/material/MenuItem";
 import Alert from "@mui/material/Alert";
-import Select from "@mui/material/Select";
+
 import axios from "axios";
 import {
   FacebookAuthProvider,
@@ -29,33 +28,11 @@ import {
   GoogleAuthProvider,
 } from "firebase/auth";
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
-
-const roles = ["Player", "Host"];
-
-function getStyles(name, role, theme) {
-  return {
-    fontWeight:
-      role.indexOf(name) === -1
-        ? theme.typography.fontWeightRegular
-        : theme.typography.fontWeightMedium,
-  };
-}
-
 const providerFacebook = new FacebookAuthProvider();
 const providerGoogle = new GoogleAuthProvider();
 export default function RegisterFormComp() {
   const theme = useTheme();
-  const [role, setRole] = React.useState("");
+
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -108,11 +85,7 @@ export default function RegisterFormComp() {
       setIsPasswordValid(false);
       return;
     }
-    if (role === "") {
-      setSnackbarOpen(true);
-      handleSnackbarOpen("Failed Please Select a Role");
-      return;
-    }
+
     // Form submission successful
     console.log("Form submitted:", { firstName, lastName, email, password });
     try {
@@ -133,10 +106,10 @@ export default function RegisterFormComp() {
           setIsEmailValid(true);
           setIsPasswordValid(true);
           localStorage.setItem("email", email);
-          localStorage.setItem("role", role);
+
           // Navigate to "/QNA" after successful registration and pass data as state
           navigate("/registersecurityquestion", {
-            state: { email, firstName, lastName, password, role },
+            state: { email, firstName, lastName, password },
           });
         })
         .catch((error) => {
@@ -168,12 +141,13 @@ export default function RegisterFormComp() {
             if (response.status === 200) {
               // Email already exists, save it in session and navigate to login check security question page
               localStorage.setItem("email", email);
-              localStorage.setItem("role", role);
+
               navigate("/loginchecksecurityquestionPage");
             } else {
             }
           })
           .catch((error) => {
+            localStorage.setItem("email", email);
             navigate("/registersecurityquestion", {
               state: {
                 email,
@@ -217,12 +191,13 @@ export default function RegisterFormComp() {
             if (response.status === 200) {
               // Email already exists, save it in session and navigate to login check security question page
               localStorage.setItem("email", email);
-              localStorage.setItem("role", role);
+
               navigate("/loginchecksecurityquestionPage");
             } else {
             }
           })
           .catch((error) => {
+            localStorage.setItem("email", email);
             navigate("/registersecurityquestion", {
               state: {
                 email,
@@ -242,15 +217,6 @@ export default function RegisterFormComp() {
         const credential = FacebookAuthProvider.credentialFromError(error);
         // ...
       });
-  };
-  const handleChange = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setRole(
-      // On autofill we get a stringified value.
-      typeof value === "string" ? value.split(",") : value
-    );
   };
 
   const isValidEmail = (value) => {
@@ -387,36 +353,7 @@ export default function RegisterFormComp() {
           </FormHelperText>
         </FormControl>
       </div>
-      <FormControl sx={{ m: 1, width: 465 }}>
-        <Select
-          displayEmpty
-          value={role}
-          onChange={handleChange}
-          input={<OutlinedInput />}
-          renderValue={(selected) => {
-            if (selected.length === 0) {
-              return <em>Roles</em>;
-            }
 
-            return selected;
-          }}
-          MenuProps={MenuProps}
-          inputProps={{ "aria-label": "Without label" }}
-        >
-          <MenuItem disabled value="">
-            <em>Roles</em>
-          </MenuItem>
-          {roles.map((name) => (
-            <MenuItem
-              key={name}
-              value={name}
-              style={getStyles(name, role, theme)}
-            >
-              {name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
       {/* Snackbar to show success or error message */}
       <Snackbar
         open={snackbarOpen}

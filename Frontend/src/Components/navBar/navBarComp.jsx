@@ -80,7 +80,13 @@ export default function PrimarySearchAppBar() {
       <Box sx={{ flexGrow: 1 }}>
         <AppBar position="fixed" color="primary">
           <Toolbar>
-            <Typography variant="h6" noWrap component="div" color="secondary">
+            <Typography
+              href="/"
+              variant="h6"
+              noWrap
+              component="div"
+              color="secondary"
+            >
               Trivia Game
             </Typography>
 

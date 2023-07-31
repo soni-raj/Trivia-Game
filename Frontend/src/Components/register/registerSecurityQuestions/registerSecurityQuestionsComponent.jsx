@@ -22,7 +22,7 @@ function RegisterSecurityQuestion() {
   const email = location.state.email;
   const firstname = location.state.firstName;
   const lastname = location.state.lastName;
-  const role = location.state.role;
+
   function onSubmit(event) {
     event.preventDefault();
 
@@ -33,7 +33,6 @@ function RegisterSecurityQuestion() {
         email: email,
         ans1: answer1,
         ans2: answer2,
-        role: role,
       })
       .then((res) => {
         console.log(res);

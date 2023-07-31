@@ -183,11 +183,11 @@ export default function LoginFormComp() {
           setTimeout(() => navigate("/loginchecksecurityquestionPage"), 3000);
         })
         .catch((err) => {
-          alert("Wrong Credentials");
+          handleSnackbarOpen("Failed Wrong email or password");
           console.error("Login error", err);
         });
     } catch (err) {
-      alert("Wrong Credentials");
+      handleSnackbarOpen("Failed Wrong email or password");
       console.error("Login error", err);
 
       // Reset form fields

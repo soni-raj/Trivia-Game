@@ -5,15 +5,15 @@ exports.handler = async (event) => {
   try {
     const { firstname, lastname, email, ans1, ans2 } = JSON.parse(event.body);
 
-    // Generate the ID from the current datetime
-
     const newData = {
       firstname,
       lastname,
       email,
       ans1,
       ans2,
-      role,
+      games_played: 0,
+      win_loss: -1,
+      total_points: 0,
     };
 
     const params = {
