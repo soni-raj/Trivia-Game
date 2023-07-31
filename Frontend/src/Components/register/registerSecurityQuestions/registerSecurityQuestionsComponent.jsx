@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { TRIVIA_SAVE_DATA } from "../../../utils/apiUrls";
+import { TRIVIA_SAVE_QNA } from "../../../utils/apiUrls";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 const theme = createTheme();
@@ -27,7 +27,7 @@ function RegisterSecurityQuestion() {
     event.preventDefault();
 
     axios
-      .post(TRIVIA_SAVE_DATA, {
+      .post(TRIVIA_SAVE_QNA, {
         firstname: firstname,
         lastname: lastname,
         email: email,
@@ -35,8 +35,8 @@ function RegisterSecurityQuestion() {
         ans2: answer2,
       })
       .then((res) => {
-        console.log(res);
-        navigate("/");
+        localStorage.setItem("email", email);
+        setTimeout(() => navigate("/"), 2000);
       })
       .catch((err) => {
         handleSnackbarOpen("failed 2 Step Authentication Failed");
@@ -113,7 +113,8 @@ function RegisterSecurityQuestion() {
               <Alert
                 onClose={handleSnackbarClose}
                 severity={
-                  snackbarMessage.trim().split(" ")[0] === "success"
+                  snackbarMessage.trim().split(" ")[0].toLowerCase() ===
+                  "success"
                     ? "success"
                     : "error"
                 }

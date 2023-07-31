@@ -14,8 +14,9 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
-import { TRIVIA_CHECK_DATA } from "../../../utils/apiUrls";
+import { TRIVIA_CHECK_QNA } from "../../../utils/apiUrls";
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 const theme = createTheme();
 
 export default function LoginSecurityQuestionsComp() {
@@ -29,6 +30,10 @@ export default function LoginSecurityQuestionsComp() {
   const [a2, SetA2] = React.useState("");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+  const location = useLocation();
+
+  const email = location.state.email;
+
   let navigate = useNavigate();
   const handleSnackbarOpen = (message) => {
     setSnackbarMessage(message);
@@ -44,8 +49,8 @@ export default function LoginSecurityQuestionsComp() {
     console.log(a1);
     console.log(a2);
     try {
-      const url = TRIVIA_CHECK_DATA;
-      const email = localStorage.getItem("email");
+      const url = TRIVIA_CHECK_QNA;
+
       const response = await axios.post(url, {
         email: email,
         userAns1: a1,
@@ -56,8 +61,8 @@ export default function LoginSecurityQuestionsComp() {
         handleSnackbarOpen(
           "sucess 2 Step Authentication Successful. Redirecting..."
         );
-        // route to cipher
-        navigate("/");
+        localStorage.setItem("email", email);
+        setTimeout(() => navigate("/"), 2000);
       } else {
         handleSnackbarOpen(
           "failed Provided answers are wrong. Please check again"
@@ -151,7 +156,7 @@ export default function LoginSecurityQuestionsComp() {
             <Alert
               onClose={handleSnackbarClose}
               severity={
-                snackbarMessage.trim().split(" ")[0] === "success"
+                snackbarMessage.trim().split(" ")[0].toLowerCase() === "success"
                   ? "success"
                   : "error"
               }

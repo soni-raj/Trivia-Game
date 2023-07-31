@@ -6,14 +6,24 @@ import Button from "@mui/material/Button";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../../utils/firebase";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 export default function ForgotPassword() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
-
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(true);
 
   // const navigate = useNavigate();
+  const handleSnackbarOpen = (message) => {
+    setSnackbarMessage(message);
+    setSnackbarOpen(true);
+  };
 
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsEmailValid(!!email);
@@ -31,16 +41,16 @@ export default function ForgotPassword() {
     try {
       sendPasswordResetEmail(auth, email)
         .then(() => {
-          alert(
-            "A verification code has been sent to your email address for verification."
+          handleSnackbarOpen(
+            "Success A verification code has been sent to your email address for verification."
           );
-          navigate("/login", {});
+          setTimeout(() => navigate("/login"), 2000);
         })
         .catch((err) => {
-          alert("The email provided does not exist in our records.");
+          handleSnackbarOpen("Failed Email does not Exists.");
         });
     } catch (err) {
-      alert("Server Error");
+      handleSnackbarOpen("Failed Email does not Exists.");
     }
 
     // Reset form fields
@@ -112,6 +122,24 @@ export default function ForgotPassword() {
       <h4>
         <a href="/login">Login?</a>
       </h4>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          severity={
+            snackbarMessage.trim().split(" ")[0].toLowerCase() === "success"
+              ? "success"
+              : "error"
+          }
+          sx={{ width: "100%" }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }

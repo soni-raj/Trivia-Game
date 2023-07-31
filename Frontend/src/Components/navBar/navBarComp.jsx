@@ -15,17 +15,8 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import { signOut } from "firebase/auth";
 import { auth } from "../../utils/firebase";
 import { useNavigate } from "react-router-dom";
-const Search = styled("div")(({ theme }) => ({
-  // ...rest of styles
-}));
-
-const SearchIconWrapper = styled("div")(({ theme }) => ({
-  // ...rest of styles
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  // ...rest of styles
-}));
+import "./navBarComp.css";
+import { Link } from "react-router-dom";
 
 const theme = createTheme({
   palette: {
@@ -56,9 +47,12 @@ export default function PrimarySearchAppBar() {
   const handleLogout = () => {
     localStorage.removeItem("email");
     signOut(auth);
-    navigate("/");
+    setTimeout(() => navigate("/"), 2000);
   };
-
+  const handleNavigate = () => {
+    handleMenuClose();
+    setTimeout(() => navigate("/editprofile"), 2000);
+  };
   const menuId = "primary-search-account-menu";
   const renderMenu = (
     <Menu
@@ -70,24 +64,19 @@ export default function PrimarySearchAppBar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}></MenuItem>
+      <MenuItem onClick={handleNavigate}>Edit Profile</MenuItem>
     </Menu>
   );
 
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="fixed" color="primary">
+        <AppBar position="fixed" color="primary" sx={{ marginBottom: "5%" }}>
           <Toolbar>
-            <Typography
-              href="/"
-              variant="h6"
-              noWrap
-              component="div"
-              color="secondary"
-            >
-              Trivia Game
+            <Typography variant="h6" noWrap component="div" color="secondary">
+              <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
+                Trivia Game
+              </Link>
             </Typography>
 
             <Box sx={{ flexGrow: 1 }} />
