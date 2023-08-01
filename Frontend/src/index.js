@@ -12,6 +12,7 @@ import EditProfilePage from "./pages/editProfile/editProfilePage";
 import ForgotPasswordPage from "./pages/forgotPassword/forgotPassword";
 // import ConfirmOtpPage from "./pages/forgotPassword/forgotPasswordOtp/otpPage";
 import App from "./app";
+import Questions from "./Components/triviaManagement/QuestionManagement/Questions";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -33,6 +34,7 @@ root.render(
         {/* Updated component name */}
         {/* <Route path="/confirmotp" element={<ConfirmOtpPage />} /> */}
       </Route>
+      <Route exact path="/questions" element={<Questions />} />
     </Routes>
   </BrowserRouter>
 );
