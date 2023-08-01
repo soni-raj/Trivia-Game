@@ -13,6 +13,7 @@ import ForgotPasswordPage from "./pages/forgotPassword/forgotPassword";
 // import ConfirmOtpPage from "./pages/forgotPassword/forgotPasswordOtp/otpPage";
 import App from "./app";
 import Questions from "./Components/triviaManagement/QuestionManagement/Questions";
+import Game from "./Components/triviaManagement/GameManagement/GameForm";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -35,6 +36,7 @@ root.render(
         {/* <Route path="/confirmotp" element={<ConfirmOtpPage />} /> */}
       </Route>
       <Route exact path="/questions" element={<Questions />} />
+      <Route exact path="/admin" element={<Game />} />
     </Routes>
   </BrowserRouter>
 );

@@ -1,10 +1,11 @@
 
 import { TRIVIA_CONTENT_MANAGEMENT } from '../../../utils/apiUrls';
 
-let apiURL = TRIVIA_CONTENT_MANAGEMENT + '/questions';
+let apiURL = TRIVIA_CONTENT_MANAGEMENT + '/game';
 
-export const getQuestions = (category, difficulty_level) => {
+export const getGames = (category, difficulty_level) => {
   // apiURL = apiURL + `?category=${encodeURIComponent(category)}&difficulty_level=${encodeURIComponent(difficulty_level)}`;
+  console.log('getGames');
   return fetch(apiURL, {
     method: 'GET',
     headers: {
@@ -22,14 +23,14 @@ export const getQuestions = (category, difficulty_level) => {
     });
 };
 
-export const addQuestion = (questionData) => {
-  console.log(JSON.stringify({ question: questionData }));
+export const addGame = (gameData) => {
+  console.log(JSON.stringify({ game: gameData }));
   return fetch(apiURL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ question: questionData }),
+    body: JSON.stringify({ game: gameData }),
   })
     .then((response) => response.json())
     .then((data) => {
@@ -42,13 +43,13 @@ export const addQuestion = (questionData) => {
 
 };
 
-export const deleteQuestion = (question_id) => {
+export const deleteGame = (game_id) => {
   return fetch(apiURL, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ question_id: question_id }),
+    body: JSON.stringify({ game_id: game_id }),
   })
     .then((response) => response.json())
     .then((data) => {
@@ -60,13 +61,13 @@ export const deleteQuestion = (question_id) => {
     });
 };
 
-export const updateQuestion = (questionData) => {
+export const updateGame = (gameData) => {
   return fetch(apiURL, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ question: questionData }),
+    body: JSON.stringify({ game: gameData }),
   })
     .then((response) => response.json())
     .then((data) => {
