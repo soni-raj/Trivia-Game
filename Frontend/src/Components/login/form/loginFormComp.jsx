@@ -5,7 +5,7 @@ import "./formComp.css";
 import Button from "@mui/material/Button";
 import { SiGoogle, SiFacebook } from "react-icons/si";
 import IconButton from "@mui/material/IconButton";
-import { CHECK_EMAIL_EXIST } from "../../../utils/apiUrls";
+import { TRIVIA_CHECK_EMAIL_EXIST } from "../../../utils/apiUrls";
 import axios from "axios";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
@@ -65,14 +65,23 @@ export default function LoginFormComp() {
 
         // Check if the email already exists in your backend using Axios
         axios
-          .post(CHECK_EMAIL_EXIST, { email })
+          .post(TRIVIA_CHECK_EMAIL_EXIST, { email })
           .then((response) => {
             if (response.status === 200) {
-              handleSnackbarOpen("Sucess Redirecting to 2 Step Authentication");
+              handleSnackbarOpen(
+                "Success Redirecting to 2 Step Authentication"
+              );
               // Email already exists, save it in session and navigate to login check security question page
-              localStorage.setItem("email", email);
+
               setTimeout(
-                () => navigate("/loginchecksecurityquestionPage"),
+                () =>
+                  navigate("/loginchecksecurityquestionPage", {
+                    state: {
+                      email,
+                      firstName,
+                      lastName,
+                    },
+                  }),
                 3000
               );
             } else {
@@ -117,29 +126,40 @@ export default function LoginFormComp() {
 
         // Check if the email already exists in your backend using Axios
         axios
-          .post(CHECK_EMAIL_EXIST, { email })
+          .post(TRIVIA_CHECK_EMAIL_EXIST, { email })
           .then((response) => {
             if (response.status === 200) {
               handleSnackbarOpen(
-                "success Redirecting to 2 Step Authentication"
+                "Success Redirecting to 2 Step Authentication"
               );
               // Email already exists, save it in session and navigate to login check security question page
-              localStorage.setItem("email", email);
+
               setTimeout(
-                () => navigate("/loginchecksecurityquestionPage"),
+                () =>
+                  navigate("/loginchecksecurityquestionPage", {
+                    state: {
+                      email,
+                      firstName,
+                      lastName,
+                    },
+                  }),
                 3000
               );
             } else {
             }
           })
           .catch((error) => {
-            navigate("/registersecurityquestion", {
-              state: {
-                email,
-                firstName,
-                lastName,
-              },
-            });
+            setTimeout(
+              () =>
+                navigate("/registersecurityquestion", {
+                  state: {
+                    email,
+                    firstName,
+                    lastName,
+                  },
+                }),
+              2000
+            );
           });
       })
       .catch((error) => {
@@ -170,9 +190,8 @@ export default function LoginFormComp() {
       // Perform user login
       signInWithEmailAndPassword(auth, email, password)
         .then(() => {
-          handleSnackbarOpen("Sucess Redirecting to 2 Step Authentication");
+          handleSnackbarOpen("Success Redirecting to 2 Step Authentication");
 
-          localStorage.setItem("email", email);
           // Reset form fields
           setEmail("");
           setPassword("");
@@ -180,7 +199,15 @@ export default function LoginFormComp() {
           setIsPasswordValid(true);
 
           // Redirect to the desired page
-          setTimeout(() => navigate("/loginchecksecurityquestionPage"), 3000);
+          setTimeout(
+            () =>
+              navigate("/loginchecksecurityquestionPage", {
+                state: {
+                  email,
+                },
+              }),
+            3000
+          );
         })
         .catch((err) => {
           handleSnackbarOpen("Failed Wrong email or password");
@@ -327,7 +354,7 @@ export default function LoginFormComp() {
         <Alert
           onClose={handleSnackbarClose}
           severity={
-            snackbarMessage.trim().split(" ")[0] === "success"
+            snackbarMessage.trim().split(" ")[0].toLowerCase() === "success"
               ? "success"
               : "error"
           }

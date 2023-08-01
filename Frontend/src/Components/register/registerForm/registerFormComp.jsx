@@ -16,7 +16,7 @@ import { FormHelperText } from "@mui/material";
 import { SiGoogle, SiFacebook } from "react-icons/si";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../../utils/firebase";
-import { CHECK_EMAIL_EXIST } from "../../../utils/apiUrls";
+import { TRIVIA_CHECK_EMAIL_EXIST } from "../../../utils/apiUrls";
 import Snackbar from "@mui/material/Snackbar";
 
 import Alert from "@mui/material/Alert";
@@ -105,12 +105,15 @@ export default function RegisterFormComp() {
           setIsLastNameValid(true);
           setIsEmailValid(true);
           setIsPasswordValid(true);
-          localStorage.setItem("email", email);
 
           // Navigate to "/QNA" after successful registration and pass data as state
-          navigate("/registersecurityquestion", {
-            state: { email, firstName, lastName, password },
-          });
+          setTimeout(
+            () =>
+              navigate("/registersecurityquestion", {
+                state: { email, firstName, lastName, password },
+              }),
+            2000
+          );
         })
         .catch((error) => {
           handleSnackbarOpen("Failed this Email Already Exist...");
@@ -136,25 +139,37 @@ export default function RegisterFormComp() {
 
         // Check if the email already exists in your backend using Axios
         axios
-          .post(CHECK_EMAIL_EXIST, { email })
+          .post(TRIVIA_CHECK_EMAIL_EXIST, { email })
           .then((response) => {
             if (response.status === 200) {
               // Email already exists, save it in session and navigate to login check security question page
-              localStorage.setItem("email", email);
-
-              navigate("/loginchecksecurityquestionPage");
+              setTimeout(
+                () =>
+                  navigate("/loginchecksecurityquestionPage", {
+                    state: {
+                      email,
+                      firstName,
+                      lastName,
+                    },
+                  }),
+                2000
+              );
             } else {
             }
           })
           .catch((error) => {
             localStorage.setItem("email", email);
-            navigate("/registersecurityquestion", {
-              state: {
-                email,
-                firstName,
-                lastName,
-              },
-            });
+            setTimeout(
+              () =>
+                navigate("/registersecurityquestion", {
+                  state: {
+                    email,
+                    firstName,
+                    lastName,
+                  },
+                }),
+              2000
+            );
           });
       })
       .catch((error) => {
@@ -186,25 +201,40 @@ export default function RegisterFormComp() {
 
         // Check if the email already exists in your backend using Axios
         axios
-          .post(CHECK_EMAIL_EXIST, { email })
+          .post(TRIVIA_CHECK_EMAIL_EXIST, { email })
           .then((response) => {
             if (response.status === 200) {
               // Email already exists, save it in session and navigate to login check security question page
-              localStorage.setItem("email", email);
+              setTimeout(
+                () =>
+                  navigate(
+                    "/loginchecksecurityquestionPage",
 
-              navigate("/loginchecksecurityquestionPage");
+                    {
+                      state: {
+                        email,
+                        firstName,
+                        lastName,
+                      },
+                    }
+                  ),
+                2000
+              );
             } else {
             }
           })
           .catch((error) => {
-            localStorage.setItem("email", email);
-            navigate("/registersecurityquestion", {
-              state: {
-                email,
-                firstName,
-                lastName,
-              },
-            });
+            setTimeout(
+              () =>
+                navigate("/registersecurityquestion", {
+                  state: {
+                    email,
+                    firstName,
+                    lastName,
+                  },
+                }),
+              2000
+            );
           });
       })
       .catch((error) => {
@@ -364,7 +394,7 @@ export default function RegisterFormComp() {
         <Alert
           onClose={handleSnackbarClose}
           severity={
-            snackbarMessage.trim().split(" ")[0] === "success"
+            snackbarMessage.trim().split(" ")[0].toLowerCase() === "success"
               ? "success"
               : "error"
           }
