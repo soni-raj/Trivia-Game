@@ -35,7 +35,7 @@ const Games = () => {
   const handleDeleteGame = async (gameId) => {
     try {
       console.log(gameId);
-      await deleteQuestion(gameId);
+      await deleteGame(gameId);
       fetchGames();
     } catch (error) {
       console.error('Error deleting game:', error);

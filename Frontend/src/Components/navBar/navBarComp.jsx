@@ -36,6 +36,7 @@ export default function PrimarySearchAppBar() {
 
   // Check if email is present in local storage
   const isUserLoggedIn = Boolean(localStorage.getItem("email"));
+  const user = localStorage.getItem("email");
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -88,6 +89,16 @@ export default function PrimarySearchAppBar() {
                   </Button>
                   <Button href="/register" variant="text" color="secondary">
                     Register
+                  </Button>
+                </>
+              )}
+              {isUserLoggedIn && user === 'admin@game.com' && (
+                <>
+                  <Button href="/admin" variant="text" color="secondary">
+                    Game Management
+                  </Button>
+                  <Button href="/questions" variant="text" color="secondary">
+                    Questions
                   </Button>
                 </>
               )}

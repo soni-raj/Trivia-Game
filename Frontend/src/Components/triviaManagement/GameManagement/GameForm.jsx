@@ -67,7 +67,7 @@ const GameForm = ({ games, onSave, onDelete }) => {
           </TableHead>
           <TableBody>
             {games.map((game) => (
-              <TableRow key={game.id}>
+              <TableRow key={game.game_id}>
                 <TableCell>{game.name}</TableCell>
                 <TableCell>{game.category}</TableCell>
                 <TableCell>{game.difficulty_level}</TableCell>
