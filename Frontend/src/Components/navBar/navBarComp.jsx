@@ -79,6 +79,10 @@ export default function PrimarySearchAppBar() {
               </Link>
             </Typography>
 
+            <Button component={Link} to="/user-teams" variant="text" color="secondary" >
+              My Teams
+            </Button>
+
             <Box sx={{ flexGrow: 1 }} />
             <Box sx={{ display: "flex" }}>
               {!isUserLoggedIn && (
