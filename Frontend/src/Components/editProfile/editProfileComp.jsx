@@ -28,6 +28,7 @@ import {
   TRIVIA_S3_OPERATIONS,
   TRIVIA_GET_ALL_USERS,
   TRIVIA_EDIT_USER_DETAIL,
+  GET_USER_TEAMS_BY_EMAIL,
 } from "../../utils/apiUrls";
 
 export default function EditProfileComp() {
@@ -46,6 +47,7 @@ export default function EditProfileComp() {
   const [allUsers, setAllUsers] = useState([]);
   const [selectedUserEmail, setSelectedUserEmail] = useState("");
   const [selectedUserDetails, setSelectedUserDetails] = useState(null);
+  const [teamAffiliations, setTeamAffiliations] = useState([]);
   const handleSnackbarOpen = (message) => {
     setSnackbarMessage(message);
     setSnackbarOpen(true);
@@ -124,8 +126,15 @@ export default function EditProfileComp() {
       });
 
     loadUserImage();
-    const currentUserEmail = currentUser; // replace "userEmail" with the actual key you used to store the email
 
+    axios
+      .post(GET_USER_TEAMS_BY_EMAIL, currentUser)
+      .then((response) => {
+        const teams = response.data;
+        setTeamAffiliations(teams);
+      })
+      .catch((error) => console.error("Error:", error));
+    const currentUserEmail = currentUser; // replace "userEmail" with the actual key you used to store the email
     axios
       .get(TRIVIA_GET_ALL_USERS)
       .then((response) => {
@@ -268,7 +277,7 @@ export default function EditProfileComp() {
         onClose={handleSnackbarClose}
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
-     <Alert
+        <Alert
           onClose={handleSnackbarClose}
           severity={
             snackbarMessage.trim().split(" ")[0].toLowerCase() === "success"
@@ -417,9 +426,14 @@ export default function EditProfileComp() {
                   horizontal: "left",
                 }}
               >
-                <MenuItem onClick={handleClose}>Team 1</MenuItem>
+                {teamAffiliations.map((item, index) => (
+                  <MenuItem key={index} onClick={handleClose}>
+                    {item}
+                  </MenuItem>
+                ))}
+                {/* <MenuItem onClick={handleClose}>Team 1</MenuItem>
                 <MenuItem onClick={handleClose}>Team 2</MenuItem>
-                <MenuItem onClick={handleClose}>Team 3</MenuItem>
+                <MenuItem onClick={handleClose}>Team 3</MenuItem> */}
               </Menu>
             </FormControl>
           </Grid>
