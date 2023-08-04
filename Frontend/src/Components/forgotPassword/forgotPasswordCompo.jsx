@@ -3,17 +3,27 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import "./formComp.css";
 import Button from "@mui/material/Button";
-import axios from "axios";
+import { sendPasswordResetEmail } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-
+import { auth } from "../../utils/firebase";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 export default function ForgotPassword() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
-
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(true);
 
   // const navigate = useNavigate();
+  const handleSnackbarOpen = (message) => {
+    setSnackbarMessage(message);
+    setSnackbarOpen(true);
+  };
 
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsEmailValid(!!email);
@@ -29,26 +39,18 @@ export default function ForgotPassword() {
 
     // Form submission successful
     try {
-      const url =
-        "https://us-central1-serverless-391002.cloudfunctions.net/api/initiateResetPassword";
-      const email = localStorage.getItem("email");
-      const response = await axios.post(url, {
-        username: email,
-      });
-      console.log(response.status == 200);
-      if (response.status == 200) {
-        alert("Email Sent!!!");
-        // route to cipher
-        navigate("/confirmOtp", {
-          state: {
-            email,
-          },
+      sendPasswordResetEmail(auth, email)
+        .then(() => {
+          handleSnackbarOpen(
+            "Success A verification code has been sent to your email address for verification."
+          );
+          setTimeout(() => navigate("/login"), 2000);
+        })
+        .catch((err) => {
+          handleSnackbarOpen("Failed Email does not Exists.");
         });
-      } else {
-        alert("Email Doesn't Exist");
-      }
     } catch (err) {
-      alert("Some other Error");
+      handleSnackbarOpen("Failed Email does not Exists.");
     }
 
     // Reset form fields
@@ -78,7 +80,7 @@ export default function ForgotPassword() {
         <TextField
           required
           id="outlined-required"
-          placeholder="xyz@gmail.com"
+          placeholder="Enter your Email Address"
           label="Email"
           type="email"
           InputLabelProps={{
@@ -120,6 +122,24 @@ export default function ForgotPassword() {
       <h4>
         <a href="/login">Login?</a>
       </h4>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          severity={
+            snackbarMessage.trim().split(" ")[0].toLowerCase() === "success"
+              ? "success"
+              : "error"
+          }
+          sx={{ width: "100%" }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }

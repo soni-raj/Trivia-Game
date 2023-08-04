@@ -1,5 +1,5 @@
 import ReactDOM from "react-dom/client";
-
+import 'bootstrap/dist/css/bootstrap.min.css';
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
@@ -8,9 +8,9 @@ import LoginCheckSecurityQuestionPage from "./pages/login/loginSecurityQuestions
 
 import RegisterPage from "./pages/register/registerPage";
 import RegisterSecurityQuestionPage from "./pages/register/securityQuestions/registerSecurityQuestionsPage";
-import RegisterOtpPage from "./pages/register/registerOtp/registerOtpPage";
-
+import EditProfilePage from "./pages/editProfile/editProfilePage";
 import ForgotPasswordPage from "./pages/forgotPassword/forgotPassword";
+<<<<<<< HEAD
 import ConfirmOtpPage from "./pages/forgotPassword/forgotPasswordOtp/otpPage";
 
 import UserTeams from "./pages/teamManagement/userTeams";
@@ -19,7 +19,14 @@ import TeamManagement from "./pages/teamManagement/manageTeam";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+=======
+// import ConfirmOtpPage from "./pages/forgotPassword/forgotPasswordOtp/otpPage";
+>>>>>>> main
 import App from "./app";
+import Questions from "./Components/triviaManagement/QuestionManagement/Questions";
+import UserTeams from "./pages/teams/userTeams";
+import TeamStatistics from "./pages/teams/teamStatistics";
+import TeamManagement from "./pages/teams/manageTeam";
 
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -33,22 +40,22 @@ root.render(
           element={<LoginCheckSecurityQuestionPage />}
         />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/registerotp" element={<RegisterOtpPage />} />{" "}
+        <Route path="/editprofile" element={<EditProfilePage />} />
         <Route
           path="/registersecurityquestion"
           element={<RegisterSecurityQuestionPage />}
         />
         <Route path="/forgotpassword" element={<ForgotPasswordPage />} />
         {/* Updated component name */}
-        <Route path="/confirmotp" element={<ConfirmOtpPage />} />
+        {/* <Route path="/confirmotp" element={<ConfirmOtpPage />} /> */}
       </Route>
 
-      {/* FEATURE 3: TEAM MANAGEMENT ROUTES */}
+      <Route exact path="/questions" element={<Questions />} />
+
+      {/* FEATURE 3: TEAM ROUTES */}
       <Route path="/user-teams" element={< UserTeams/>} />
       <Route path="/team-statistics" element={< TeamStatistics/>} />
       <Route path="/team-management" element={< TeamManagement/>} />
-
-
     </Routes>
   </BrowserRouter>
 );

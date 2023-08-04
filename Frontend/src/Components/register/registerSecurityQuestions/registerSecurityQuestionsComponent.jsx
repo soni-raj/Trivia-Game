@@ -8,14 +8,17 @@ import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-
+import { TRIVIA_SAVE_QNA } from "../../../utils/apiUrls";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 const theme = createTheme();
 function RegisterSecurityQuestion() {
   const location = useLocation();
   const navigate = useNavigate();
   const [answer1, setAnswer1] = useState("");
   const [answer2, setAnswer2] = useState("");
-  const [randomNumber, setRandomNumber] = useState();
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
   const email = location.state.email;
   const firstname = location.state.firstName;
   const lastname = location.state.lastName;
@@ -24,26 +27,29 @@ function RegisterSecurityQuestion() {
     event.preventDefault();
 
     axios
-      .post(
-        "https://us-central1-serverless-391002.cloudfunctions.net/api/storeUserData",
-        {
-          firstname: firstname,
-          lastname: lastname,
-          email: email,
-          ans1: answer1,
-          ans2: answer2,
-          key: parseInt(randomNumber),
-        }
-      )
+      .post(TRIVIA_SAVE_QNA, {
+        firstname: firstname,
+        lastname: lastname,
+        email: email,
+        ans1: answer1,
+        ans2: answer2,
+      })
       .then((res) => {
-        console.log(res);
-        navigate("/");
+        localStorage.setItem("email", email);
+        setTimeout(() => navigate("/"), 2000);
       })
       .catch((err) => {
-        alert("Please provide a unique random number");
+        handleSnackbarOpen("failed 2 Step Authentication Failed");
       });
   }
+  const handleSnackbarOpen = (message) => {
+    setSnackbarMessage(message);
+    setSnackbarOpen(true);
+  };
 
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
@@ -90,19 +96,6 @@ function RegisterSecurityQuestion() {
               onChange={(event) => setAnswer2(event.target.value)}
             />
 
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              label="Please enter a random number"
-              name="number"
-              type="number"
-              autoComplete="number"
-              autoFocus
-              value={randomNumber}
-              onChange={(event) => setRandomNumber(event.target.value)}
-            />
-
             <Button
               type="submit"
               fullWidth
@@ -111,6 +104,25 @@ function RegisterSecurityQuestion() {
             >
               Confirm Details
             </Button>
+            <Snackbar
+              open={snackbarOpen}
+              autoHideDuration={3000}
+              onClose={handleSnackbarClose}
+              anchorOrigin={{ vertical: "top", horizontal: "center" }}
+            >
+              <Alert
+                onClose={handleSnackbarClose}
+                severity={
+                  snackbarMessage.trim().split(" ")[0].toLowerCase() ===
+                  "success"
+                    ? "success"
+                    : "error"
+                }
+                sx={{ width: "100%" }}
+              >
+                {snackbarMessage}
+              </Alert>
+            </Snackbar>
           </Box>
         </Box>
       </Container>

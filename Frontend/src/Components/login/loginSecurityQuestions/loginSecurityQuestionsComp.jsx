@@ -12,9 +12,11 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
-// Reference: https://github.com/mui/material-ui/blob/v5.8.6/docs/data/material/getting-started/templates/sign-in/SignIn.js
-
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
+import { TRIVIA_CHECK_QNA } from "../../../utils/apiUrls";
+import { useState } from "react";
+import { useLocation } from "react-router-dom";
 const theme = createTheme();
 
 export default function LoginSecurityQuestionsComp() {
@@ -26,18 +28,29 @@ export default function LoginSecurityQuestionsComp() {
   );
   const [a1, SetA1] = React.useState("");
   const [a2, SetA2] = React.useState("");
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const location = useLocation();
+
+  const email = location.state.email;
 
   let navigate = useNavigate();
+  const handleSnackbarOpen = (message) => {
+    setSnackbarMessage(message);
+    setSnackbarOpen(true);
+  };
 
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     console.log(a1);
     console.log(a2);
     try {
-      const url =
-        "https://us-central1-serverless-391002.cloudfunctions.net/api/checkUserData";
-      const email = localStorage.getItem("email");
+      const url = TRIVIA_CHECK_QNA;
+
       const response = await axios.post(url, {
         email: email,
         userAns1: a1,
@@ -45,14 +58,20 @@ export default function LoginSecurityQuestionsComp() {
       });
       console.log(response.status == 200);
       if (response.status == 200) {
-        alert("Provided answers are right. Sweet success!!!");
-        // route to cipher
-        navigate("/");
+        handleSnackbarOpen(
+          "sucess 2 Step Authentication Successful. Redirecting..."
+        );
+        localStorage.setItem("email", email);
+        setTimeout(() => navigate("/"), 2000);
       } else {
-        alert("Provided answers are wrong. Please check again");
+        handleSnackbarOpen(
+          "failed Provided answers are wrong. Please check again"
+        );
       }
     } catch (err) {
-      alert("Provided answers are wrong. Please check again");
+      handleSnackbarOpen(
+        "failed Provided answers are wrong. Please check again"
+      );
     }
   };
 
@@ -128,6 +147,24 @@ export default function LoginSecurityQuestionsComp() {
               </Grid>
             </Grid>
           </Box>
+          <Snackbar
+            open={snackbarOpen}
+            autoHideDuration={3000}
+            onClose={handleSnackbarClose}
+            anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          >
+            <Alert
+              onClose={handleSnackbarClose}
+              severity={
+                snackbarMessage.trim().split(" ")[0].toLowerCase() === "success"
+                  ? "success"
+                  : "error"
+              }
+              sx={{ width: "100%" }}
+            >
+              {snackbarMessage}
+            </Alert>
+          </Snackbar>
         </Box>
       </Container>
     </ThemeProvider>

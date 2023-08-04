@@ -5,7 +5,10 @@ import "./formComp.css";
 import Button from "@mui/material/Button";
 import { SiGoogle, SiFacebook } from "react-icons/si";
 import IconButton from "@mui/material/IconButton";
-
+import { TRIVIA_CHECK_EMAIL_EXIST } from "../../../utils/apiUrls";
+import axios from "axios";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -15,30 +18,166 @@ import FormControl from "@mui/material/FormControl";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { FormHelperText } from "@mui/material";
+import { auth, app } from "../../../utils/firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import {
-  AuthenticationDetails,
-  CognitoUser,
-  CognitoUserPool,
-} from "amazon-cognito-identity-js";
-import awsCognitoCredentials from "../../../utils/cognitoCredentials";
+  FacebookAuthProvider,
+  signInWithPopup,
+  GoogleAuthProvider,
+} from "firebase/auth";
+const providerFacebook = new FacebookAuthProvider();
+const providerGoogle = new GoogleAuthProvider();
 export default function LoginFormComp() {
   const [showPassword, setShowPassword] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(true);
   const [isPasswordValid, setIsPasswordValid] = useState(true);
   const navigate = useNavigate();
   // const navigate = useNavigate();
+  const handleSnackbarOpen = (message) => {
+    setSnackbarMessage(message);
+    setSnackbarOpen(true);
+  };
 
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
   const handleClickShowPassword = () => {
     setShowPassword((show) => !show);
+  };
+  const handleFacebookLogin = () => {
+    signInWithPopup(auth, providerFacebook)
+      .then((result) => {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        const credential = FacebookAuthProvider.credentialFromResult(result);
+        const token = credential.accessToken;
+        // The signed-in user info.
+
+        let email = result.user.email;
+        let name = result.user.displayName.split(" ");
+        let firstName = name[0];
+        let lastName = name[1];
+
+        console.log(result.user);
+
+        // Check if the email already exists in your backend using Axios
+        axios
+          .post(TRIVIA_CHECK_EMAIL_EXIST, { email })
+          .then((response) => {
+            if (response.status === 200) {
+              handleSnackbarOpen(
+                "Success Redirecting to 2 Step Authentication"
+              );
+              // Email already exists, save it in session and navigate to login check security question page
+
+              setTimeout(
+                () =>
+                  navigate("/loginchecksecurityquestionPage", {
+                    state: {
+                      email,
+                      firstName,
+                      lastName,
+                    },
+                  }),
+                3000
+              );
+            } else {
+            }
+          })
+          .catch((error) => {
+            navigate("/registersecurityquestion", {
+              state: {
+                email,
+                firstName,
+                lastName,
+              },
+            });
+          });
+      })
+      .catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.customData.email;
+        // The AuthCredential type that was used.
+        const credential = FacebookAuthProvider.credentialFromError(error);
+        // ...
+      });
+  };
+
+  const handleGoogleLogin = () => {
+    signInWithPopup(auth, providerGoogle)
+      .then((result) => {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential.accessToken;
+        // The signed-in user info.
+
+        let email = result.user.email;
+        let name = result.user.displayName.split(" ");
+        let firstName = name[0];
+        let lastName = name[1];
+
+        console.log(result.user);
+
+        // Check if the email already exists in your backend using Axios
+        axios
+          .post(TRIVIA_CHECK_EMAIL_EXIST, { email })
+          .then((response) => {
+            if (response.status === 200) {
+              handleSnackbarOpen(
+                "Success Redirecting to 2 Step Authentication"
+              );
+              // Email already exists, save it in session and navigate to login check security question page
+
+              setTimeout(
+                () =>
+                  navigate("/loginchecksecurityquestionPage", {
+                    state: {
+                      email,
+                      firstName,
+                      lastName,
+                    },
+                  }),
+                3000
+              );
+            } else {
+            }
+          })
+          .catch((error) => {
+            setTimeout(
+              () =>
+                navigate("/registersecurityquestion", {
+                  state: {
+                    email,
+                    firstName,
+                    lastName,
+                  },
+                }),
+              2000
+            );
+          });
+      })
+      .catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.customData.email;
+        // The AuthCredential type that was used.
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        // ...
+      });
   };
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
-
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     setIsEmailValid(!!email);
     setIsPasswordValid(!!password);
@@ -47,45 +186,43 @@ export default function LoginFormComp() {
       return;
     }
 
-    // Create a new CognitoUser instance
-    const userPool = new CognitoUserPool(awsCognitoCredentials);
-    const user = new CognitoUser({
-      Username: email,
-      Pool: userPool,
-    });
+    try {
+      // Perform user login
+      signInWithEmailAndPassword(auth, email, password)
+        .then(() => {
+          handleSnackbarOpen("Success Redirecting to 2 Step Authentication");
 
-    // Create AuthenticationDetails object
-    const authenticationDetails = new AuthenticationDetails({
-      Username: email,
-      Password: password,
-    });
+          // Reset form fields
+          setEmail("");
+          setPassword("");
+          setIsEmailValid(true);
+          setIsPasswordValid(true);
 
-    // Perform user login
-    user.authenticateUser(authenticationDetails, {
-      onSuccess: (session) => {
-        alert("Login Success ");
-        // Access token, ID token, and refresh token
-        const accessToken = session.getAccessToken().getJwtToken();
-        const idToken = session.getIdToken().getJwtToken();
-        const refreshToken = session.getRefreshToken().getToken();
-        localStorage.setItem("email", email);
-        // Reset form fields
-        setEmail("");
-        setPassword("");
+          // Redirect to the desired page
+          setTimeout(
+            () =>
+              navigate("/loginchecksecurityquestionPage", {
+                state: {
+                  email,
+                },
+              }),
+            3000
+          );
+        })
+        .catch((err) => {
+          handleSnackbarOpen("Failed Wrong email or password");
+          console.error("Login error", err);
+        });
+    } catch (err) {
+      handleSnackbarOpen("Failed Wrong email or password");
+      console.error("Login error", err);
 
-        // Redirect to the desired page
-        navigate("/loginchecksecurityquestionPage");
-      },
-      onFailure: (err) => {
-        alert("Wrong Password");
-        console.error("Login error", err);
-      },
-    });
-    // Reset form fields
-    setEmail("");
-    setPassword("");
-    setIsEmailValid(true);
-    setIsPasswordValid(true);
+      // Reset form fields
+      setEmail("");
+      setPassword("");
+      setIsEmailValid(true);
+      setIsPasswordValid(true);
+    }
   };
 
   return (
@@ -104,7 +241,7 @@ export default function LoginFormComp() {
           <Button
             variant="outlined"
             startIcon={<SiGoogle />}
-            onClick={() => console.log("Sign in with Google clicked")}
+            onClick={handleGoogleLogin}
             sx={{ mr: "1rem" }} // Add margin-right of 1rem
           >
             Log in with Google
@@ -114,7 +251,7 @@ export default function LoginFormComp() {
           <Button
             variant="outlined"
             startIcon={<SiFacebook />}
-            onClick={() => console.log("Sign in with Facebook clicked")}
+            onClick={handleFacebookLogin}
             sx={{ ml: "1rem" }}
           >
             Log in with Facebook
@@ -208,6 +345,24 @@ export default function LoginFormComp() {
       <h4>
         <a href="/forgotpassword">Forgot Password?</a>
       </h4>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          severity={
+            snackbarMessage.trim().split(" ")[0].toLowerCase() === "success"
+              ? "success"
+              : "error"
+          }
+          sx={{ width: "100%" }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }
