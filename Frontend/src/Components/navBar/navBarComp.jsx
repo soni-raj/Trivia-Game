@@ -29,7 +29,7 @@ const theme = createTheme({
   },
 });
 
-export default function PrimarySearchAppBar() {
+export default function Navbar() {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const isMenuOpen = Boolean(anchorEl);
@@ -78,10 +78,27 @@ export default function PrimarySearchAppBar() {
                 Trivia Game
               </Link>
             </Typography>
-
-            <Button component={Link} to="/user-teams" variant="text" color="secondary" >
+            {isUserLoggedIn && (
+              <Button
+                sx={{
+                  "padding-bottom": "0px",
+                  "padding-left": "15px",
+                }}
+                href="/user-teams"
+                variant="text"
+                color="secondary"
+              >
+                My Teams
+              </Button>
+            )}
+            {/* <Button
+              component={Link}
+              to="/user-teams"
+              variant="text"
+              color="secondary"
+            >
               My Teams
-            </Button>
+            </Button> */}
 
             <Box sx={{ flexGrow: 1 }} />
             <Box sx={{ display: "flex" }}>

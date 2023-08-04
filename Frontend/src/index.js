@@ -1,5 +1,5 @@
 import ReactDOM from "react-dom/client";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
@@ -20,7 +20,6 @@ import UserTeams from "./pages/teams/userTeams";
 import TeamStatistics from "./pages/teams/teamStatistics";
 import TeamManagement from "./pages/teams/manageTeam";
 
-
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <BrowserRouter>
@@ -40,14 +39,14 @@ root.render(
         <Route path="/forgotpassword" element={<ForgotPasswordPage />} />
         {/* Updated component name */}
         {/* <Route path="/confirmotp" element={<ConfirmOtpPage />} /> */}
+
+        <Route exact path="/questions" element={<Questions />} />
+
+        {/* FEATURE 3: TEAM ROUTES */}
+        <Route path="/user-teams" element={<UserTeams />} />
+        <Route path="/team-statistics" element={<TeamStatistics />} />
+        <Route path="/team-management" element={<Route TeamManagement />} />
       </Route>
-
-      <Route exact path="/questions" element={<Questions />} />
-
-      {/* FEATURE 3: TEAM ROUTES */}
-      <Route path="/user-teams" element={< UserTeams/>} />
-      <Route path="/team-statistics" element={< TeamStatistics/>} />
-      <Route path="/team-management" element={< TeamManagement/>} />
     </Routes>
   </BrowserRouter>
 );

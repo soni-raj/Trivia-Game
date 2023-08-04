@@ -59,7 +59,7 @@ export default function LoginSecurityQuestionsComp() {
       console.log(response.status == 200);
       if (response.status == 200) {
         handleSnackbarOpen(
-          "sucess 2 Step Authentication Successful. Redirecting..."
+          "success 2 Step Authentication Successful. Redirecting..."
         );
         localStorage.setItem("email", email);
         setTimeout(() => navigate("/"), 2000);
