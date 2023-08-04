@@ -10,8 +10,7 @@ import { CREATE_TEAM, REMOVE_TEAM_MEMBER, GET_USER_TEAMS_BY_EMAIL } from "../../
 const attr = require('dynamodb-data-types').AttributeValue;
 
 
-
-const currentUser = 'adrianasango31@gmail.com';
+const currentUser = localStorage.getItem("email");
 
 function unwrapDynamoData(response) {
     return response.map((item) => attr.unwrap(item));
