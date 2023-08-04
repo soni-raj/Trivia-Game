@@ -7,33 +7,38 @@ table = dynamodb.Table(table_name)
 
 def lambda_handler(event, context):
     try:
+        print(event)
         query_params = event.get('queryStringParameters', {})
-        category = query_params.get('category')
-        difficulty_level = query_params.get('difficulty_level')
-
-        filter_expression = None
-        expression_attribute_values = {}
-        
-        if category:
-            filter_expression = 'category = :cat'
-            expression_attribute_values[':cat'] = category
-        
-        if difficulty_level:
-            if filter_expression:
-                filter_expression += ' AND difficulty_level = :diff'
-            else:
-                filter_expression = 'difficulty_level = :diff'
-            expression_attribute_values[':diff'] = difficulty_level
-
-        if filter_expression:
-            response = table.scan(
-                FilterExpression=filter_expression,
-                ExpressionAttributeValues=expression_attribute_values
-            )
-        else:
+        if not query_params:
             response = table.scan()
+            games = response['Items']
+        else:
+            game_id = query_params.get('game_id')
 
-        games = response['Items']
+            if game_id:
+                response = table.get_item(Key={'game_id': game_id})
+                if 'Item' in response:
+                    games = [response['Item']]
+                else:
+                    return {
+                        'statusCode': 404,
+                        'headers': {
+                            'Access-Control-Allow-Origin': '*',
+                            'Access-Control-Allow-Headers': 'Content-Type',
+                            'Access-Control-Allow-Methods': 'GET',
+                        },
+                        'body': json.dumps('Error: Game not found.')
+                    }
+            else:
+                return {
+                    'statusCode': 400,
+                    'headers': {
+                        'Access-Control-Allow-Origin': '*',
+                        'Access-Control-Allow-Headers': 'Content-Type',
+                        'Access-Control-Allow-Methods': 'GET',
+                    },
+                    'body': json.dumps('Error: game_id parameter is required.')
+                }
 
         return {
             'statusCode': 200,

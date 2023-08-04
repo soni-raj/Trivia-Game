@@ -1,79 +1,52 @@
-
 import { TRIVIA_CONTENT_MANAGEMENT } from '../../../utils/apiUrls';
 
-let apiURL = TRIVIA_CONTENT_MANAGEMENT + '/questions';
+const apiURL = TRIVIA_CONTENT_MANAGEMENT + '/questions';
 
-export const getQuestions = (category, difficulty_level) => {
-  // apiURL = apiURL + `?category=${encodeURIComponent(category)}&difficulty_level=${encodeURIComponent(difficulty_level)}`;
-  return fetch(apiURL, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+const fetchData = (url, method, body = null) => {
+  const headers = {
+    'Content-Type': 'application/json',
+  };
+
+  return fetch(url, {
+    method,
+    headers,
+    body: body ? JSON.stringify(body) : null,
   })
     .then((response) => response.json())
-    .then((data) => {
-      console.log(data)
-      return JSON.parse(data['body']);
-    })
     .catch((error) => {
       console.error(error);
       return {};
     });
+};
+
+export const getQuestions = (category, difficulty_level, num_questions) => {
+  let queryParams = '';
+
+  if (category) {
+    queryParams += `category=${encodeURIComponent(category)}&`;
+  }
+
+  if (difficulty_level) {
+    queryParams += `difficulty_level=${encodeURIComponent(difficulty_level)}&`;
+  }
+
+  if (num_questions) {
+    queryParams += `num_questions=${encodeURIComponent(num_questions)}`;
+  }
+
+  const url = apiURL + (queryParams ? `?${queryParams}` : '');
+
+  return fetchData(url, 'GET');
 };
 
 export const addQuestion = (questionData) => {
-  console.log(JSON.stringify({ question: questionData }));
-  return fetch(apiURL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ question: questionData }),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      return data;
-    })
-    .catch((error) => {
-      console.error(error);
-      return {};
-    });
-
+  return fetchData(apiURL, 'POST', { question: questionData });
 };
 
 export const deleteQuestion = (question_id) => {
-  return fetch(apiURL, {
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ question_id: question_id }),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      return data;
-    })
-    .catch((error) => {
-      console.error(error);
-      return {};
-    });
+  return fetchData(apiURL, 'DELETE', { question_id });
 };
 
 export const updateQuestion = (questionData) => {
-  return fetch(apiURL, {
-    method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ question: questionData }),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      return data;
-    })
-    .catch((error) => {
-      console.error(error);
-      return {};
-    });
+  return fetchData(apiURL, 'PATCH', { question: questionData });
 };

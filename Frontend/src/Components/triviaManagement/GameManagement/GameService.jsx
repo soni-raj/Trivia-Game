@@ -3,20 +3,29 @@ import { TRIVIA_CONTENT_MANAGEMENT } from '../../../utils/apiUrls';
 
 let apiURL = TRIVIA_CONTENT_MANAGEMENT + '/game';
 
-export const getGames = (category, difficulty_level) => {
-  // apiURL = apiURL + `?category=${encodeURIComponent(category)}&difficulty_level=${encodeURIComponent(difficulty_level)}`;
-  console.log('getGames');
-  return fetch(apiURL, {
+export const getGames = (category, difficulty_level, num_questions) => {
+  let queryParams = '';
+
+  if (category) {
+    queryParams += `category=${encodeURIComponent(category)}&`;
+  }
+
+  if (difficulty_level) {
+    queryParams += `difficulty_level=${encodeURIComponent(difficulty_level)}&`;
+  }
+
+  if (num_questions) {
+    queryParams += `num_questions=${encodeURIComponent(num_questions)}`;
+  }
+
+  const url = apiURL + (queryParams ? `?${queryParams}` : '');
+  return fetch(url, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
     },
   })
     .then((response) => response.json())
-    .then((data) => {
-      console.log(data)
-      return JSON.parse(data['body']);
-    })
     .catch((error) => {
       console.error(error);
       return {};
