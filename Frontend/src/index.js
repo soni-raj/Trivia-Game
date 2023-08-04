@@ -10,20 +10,12 @@ import RegisterPage from "./pages/register/registerPage";
 import RegisterSecurityQuestionPage from "./pages/register/securityQuestions/registerSecurityQuestionsPage";
 import EditProfilePage from "./pages/editProfile/editProfilePage";
 import ForgotPasswordPage from "./pages/forgotPassword/forgotPassword";
-<<<<<<< HEAD
-import ConfirmOtpPage from "./pages/forgotPassword/forgotPasswordOtp/otpPage";
 
-import UserTeams from "./pages/teamManagement/userTeams";
-import TeamStatistics from "./pages/teamManagement/teamStatistics";
-import TeamManagement from "./pages/teamManagement/manageTeam";
-
-import 'bootstrap/dist/css/bootstrap.min.css';
-
-=======
 // import ConfirmOtpPage from "./pages/forgotPassword/forgotPasswordOtp/otpPage";
->>>>>>> main
 import App from "./app";
+
 import Questions from "./Components/triviaManagement/QuestionManagement/Questions";
+
 import UserTeams from "./pages/teams/userTeams";
 import TeamStatistics from "./pages/teams/teamStatistics";
 import TeamManagement from "./pages/teams/manageTeam";
