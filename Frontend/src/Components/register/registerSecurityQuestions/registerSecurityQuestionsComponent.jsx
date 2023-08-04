@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { TRIVIA_SAVE_QNA } from "../../../utils/apiUrls";
+import { TRIVIA_SAVE_QNA, SUBSCRIBE_EMAIL } from "../../../utils/apiUrls";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 const theme = createTheme();
@@ -35,8 +35,15 @@ function RegisterSecurityQuestion() {
         ans2: answer2,
       })
       .then((res) => {
-        localStorage.setItem("email", email);
-        setTimeout(() => navigate("/"), 2000);
+        axios
+          .post(SUBSCRIBE_EMAIL, {
+            email: email,
+          })
+          .then((res) => {
+            handleSnackbarOpen("Success Please Confirm your Email!");
+            localStorage.setItem("email", email);
+            setTimeout(() => navigate("/"), 2000);
+          });
       })
       .catch((err) => {
         handleSnackbarOpen("failed 2 Step Authentication Failed");
