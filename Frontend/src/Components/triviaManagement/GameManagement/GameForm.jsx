@@ -10,30 +10,30 @@ import {
   Button,
   Stack,
 } from '@mui/material';
-import QuestionModal from './QuestionModal';
+import GameModal from './GameModal';
 
-const QuestionListForm = ({ questions, onSave, onDelete }) => {
+const GameForm = ({ games, onSave, onDelete }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingQuestion, setEditingQuestion] = useState({
-    question: '',
+  const [editingGame, setEditingGame] = useState({
+    name: '',
     category: '',
     difficulty_level: '',
-    options: ['', ''],
-    correct_answer: '',
+    time_frame: '',
+    no_of_questions: '',
   });
 
-  const handleOpenModal = (questionData) => {
-    setEditingQuestion(questionData);
+  const handleOpenModal = (gameData) => {
+    setEditingGame(gameData);
     setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    setEditingQuestion(null);
+    setEditingGame(null);
   };
 
-  const handleSaveQuestion = (questionData) => {
-    onSave(questionData);
+  const handleSaveGame = (gameData) => {
+    onSave(gameData);
     handleCloseModal();
   };
 
@@ -45,45 +45,45 @@ const QuestionListForm = ({ questions, onSave, onDelete }) => {
         onClick={() => handleOpenModal(null)}
         sx={{ m: 2 }}
       >
-        Add Question
+        Add Game
       </Button>
 
-      <QuestionModal
+      <GameModal
         open={isModalOpen}
         onClose={handleCloseModal}
-        onSave={handleSaveQuestion}
-        initialData={editingQuestion}
+        onSave={handleSaveGame}
+        initialData={editingGame}
       />
 
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Question</TableCell>
+              <TableCell>Game</TableCell>
               <TableCell>Category</TableCell>
               <TableCell>Difficulty</TableCell>
               <TableCell>Action</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {questions.map((question) => (
-              <TableRow key={question.question_id}>
-                <TableCell>{question.question}</TableCell>
-                <TableCell>{question.category}</TableCell>
-                <TableCell>{question.difficulty_level}</TableCell>
+            {games.map((game) => (
+              <TableRow key={game.game_id}>
+                <TableCell>{game.name}</TableCell>
+                <TableCell>{game.category}</TableCell>
+                <TableCell>{game.difficulty_level}</TableCell>
                 <TableCell>
                   <Stack direction="row" spacing={2}>
                     <Button
                       variant="contained"
                       color="primary"
-                      onClick={() => handleOpenModal(question)}
+                      onClick={() => handleOpenModal(game)}
                     >
                       Edit
                     </Button>
                     <Button
                       variant="contained"
                       color="secondary"
-                      onClick={() => onDelete(question.question_id)}
+                      onClick={() => onDelete(game.game_id)}
                     >
                       Delete
                     </Button>
@@ -98,4 +98,4 @@ const QuestionListForm = ({ questions, onSave, onDelete }) => {
   );
 };
 
-export default QuestionListForm;
+export default GameForm;

@@ -19,6 +19,10 @@ import Questions from "./Components/triviaManagement/QuestionManagement/Question
 import UserTeams from "./pages/teams/userTeams";
 import TeamStatistics from "./pages/teams/teamStatistics";
 import TeamManagement from "./pages/teams/manageTeam";
+import Games from "./Components/triviaManagement/GameManagement/Games";
+import Lobby from "./Components/gameLobby/Lobby";
+import InGamePage from "./Components/InGameExperience/InGamePage";
+import ChatBox from "./Components/InGameExperience/ChatBox";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -47,6 +51,11 @@ root.render(
         <Route path="/team-statistics" element={<TeamStatistics />} />
         <Route path="/team-management" element={<Route TeamManagement />} />
       </Route>
+      <Route exact path="/questions" element={<Questions />} />
+      <Route exact path="/admin" element={<Games />} />
+      <Route exact path="/lobby" element={<Lobby />} />
+      <Route path="/game/:game_id" element={<InGamePage/>}/>
+      <Route exact path="/chat" element={<ChatBox />} />
     </Routes>
   </BrowserRouter>
 );

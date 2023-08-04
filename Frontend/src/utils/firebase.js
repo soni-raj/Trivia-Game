@@ -1,12 +1,13 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
+const firebaseConfig1 = {
   apiKey: "AIzaSyAeihRoSXJTuJYASWPekpTFlIr_VbAAIxU",
   authDomain: "serverless-391002.firebaseapp.com",
   projectId: "serverless-391002",
@@ -16,7 +17,19 @@ const firebaseConfig = {
   measurementId: "G-4XBCCSD40H",
 };
 
-// Initialize Firebase
-export const app = initializeApp(firebaseConfig);
+const firebaseConfig2 = {
+  apiKey: "AIzaSyBSPO5yrQ8y9h3wqFgZaLrm7o2DiDVLPdQ",
+  authDomain: "big-depth-391317.firebaseapp.com",
+  databaseURL: "https://big-depth-391317-default-rtdb.firebaseio.com",
+  projectId: "big-depth-391317",
+  storageBucket: "big-depth-391317.appspot.com",
+  messagingSenderId: "945637813834",
+  appId: "1:945637813834:web:9a4a6016c2364b2ca3c0b3"
+};
 
-export const auth = getAuth(app);
+// Initialize Firebase
+export const app1 = initializeApp(firebaseConfig1);
+export const app2 = initializeApp(firebaseConfig2, "app2");
+
+export const auth = getAuth(app1);
+export const db = getFirestore(app2);

@@ -18,7 +18,7 @@ import FormControl from "@mui/material/FormControl";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { FormHelperText } from "@mui/material";
-import { auth, app } from "../../../utils/firebase";
+import { auth } from "../../../utils/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import {
   FacebookAuthProvider,
