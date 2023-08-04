@@ -11,7 +11,7 @@ import { INVITE_TEAM_MEMBER, UPDATE_TEAM_MEMBER_ROLE, REMOVE_TEAM_MEMBER } from 
 
 const memberIcon = [require('../../images/koi.png')];
 
-const currentUser = 'adrianasango31@gmail.com';
+const currentUser = localStorage.getItem("email");
 
 function TeamManagement() {
     const { state } = useLocation();
