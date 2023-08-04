@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getGames } from '../triviaManagement/GameManagement/GameService';
-import { getTeamsPerUser } from './LobbyService';
+import { getTeamsPerUser, storeGame } from './LobbyService';
 import { Box, Container, Typography, Grid, Select, MenuItem, FormControl, InputLabel, Button, Dialog, DialogTitle, DialogContent, DialogActions, List, ListItem, ListItemText, ListItemButton } from '@mui/material';
 import { useNavigate } from "react-router-dom";
 
@@ -14,7 +14,9 @@ const Lobby = () => {
     const [filterTimeFrame, setFilterTimeFrame] = useState('');
     const [openTeamsModal, setOpenTeamsModal] = useState(false);
     const [teams, setTeams] = useState([]);
+    const [selectedGameId, setSelectedGameId] = useState(null);
     const navigate = useNavigate();
+
 
     const calculateTimeRemaining = (datetime) => {
         const now = new Date();
@@ -76,17 +78,20 @@ const Lobby = () => {
     });
 
     const startGame = async (game_id) => {
+        setSelectedGameId(game_id);
         const currentUser = localStorage.getItem("email");
         const teamData = await getTeamsPerUser(currentUser);
         setTeams(teamData);
         setOpenTeamsModal(true);
     };
 
-    const handleJoinTeamClick = (teamId) => {
+    const handleJoinTeamClick = async (teamId) => {
         console.log(`Joining Team with ID: ${teamId}`);
-        navigate("/game");
-
+        console.log(selectedGameId);
+        const currentUserEmail = localStorage.getItem("email");
+        await storeGame(selectedGameId, currentUserEmail, teamId);
         setOpenTeamsModal(false);
+        navigate("/game/" + selectedGameId);
     };
 
     return (
