@@ -79,6 +79,7 @@ export const INVITE_TEAM_MEMBER ="https://43oo1kgp3b.execute-api.us-east-1.amazo
 export const UPDATE_TEAM_MEMBER_ROLE ="https://9m5y4kp37i.execute-api.us-east-1.amazonaws.com/t1/update-member-role";
 export const UPDATE_TEAM_BY_TEAM_ID = "https://j3nw67updb.execute-api.us-east-1.amazonaws.com/update-team";
 
+export const GET_TEAM_BY_TEAM_ID = "https://h26hqa9ooe.execute-api.us-east-1.amazonaws.com/get-team";
 
 
 
