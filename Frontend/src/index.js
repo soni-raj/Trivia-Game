@@ -10,12 +10,16 @@ import RegisterPage from "./pages/register/registerPage";
 import RegisterSecurityQuestionPage from "./pages/register/securityQuestions/registerSecurityQuestionsPage";
 import EditProfilePage from "./pages/editProfile/editProfilePage";
 import ForgotPasswordPage from "./pages/forgotPassword/forgotPassword";
+
 // import ConfirmOtpPage from "./pages/forgotPassword/forgotPasswordOtp/otpPage";
 import App from "./app";
+
 import Questions from "./Components/triviaManagement/QuestionManagement/Questions";
+
 import UserTeams from "./pages/teams/userTeams";
 import TeamStatistics from "./pages/teams/teamStatistics";
 import TeamManagement from "./pages/teams/manageTeam";
+
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -37,6 +41,7 @@ root.render(
         {/* Updated component name */}
         {/* <Route path="/confirmotp" element={<ConfirmOtpPage />} /> */}
       </Route>
+
       <Route exact path="/questions" element={<Questions />} />
 
       {/* FEATURE 3: TEAM ROUTES */}
