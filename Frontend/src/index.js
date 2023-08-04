@@ -41,7 +41,7 @@ root.render(
       <Route exact path="/questions" element={<Questions />} />
       <Route exact path="/admin" element={<Games />} />
       <Route exact path="/lobby" element={<Lobby />} />
-      <Route exact path="/game" element={<InGamePage />} />
+      <Route path="/game/:game_id" element={<InGamePage/>}/>
       <Route exact path="/chat" element={<ChatBox />} />
     </Routes>
   </BrowserRouter>
