@@ -4,7 +4,7 @@ import { getTeamsPerUser, storeGame } from './LobbyService';
 import { Box, Container, Typography, Grid, Select, MenuItem, FormControl, InputLabel, Button, Dialog, DialogTitle, DialogContent, DialogActions, List, ListItem, ListItemText, ListItemButton } from '@mui/material';
 import { useNavigate } from "react-router-dom";
 import { db } from "../../utils/firebase";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, query, collection, getDocs } from "firebase/firestore";
 
 const Lobby = () => {
     const [games, setGames] = useState([]);
@@ -44,7 +44,27 @@ const Lobby = () => {
                 console.error('Error fetching games:', error);
             }
         };
+        const fetchParticipantsForGames = async () => {
+            const updatedGames = await Promise.all(games.map(async (game) => {
+                const q = query(
+                    collection(db, "games", game.game_id, "users")
+                );
+
+                const querySnapshot = await getDocs(q);
+                const fetchedGameusers = querySnapshot.docs.map((doc) => doc.data().user_email);
+                console.log(fetchedGameusers.length);
+
+                return {
+                    ...game,
+                    participants: fetchedGameusers.length,
+                };
+            }));
+
+            setGames(updatedGames);
+        };
+
         fetchGames();
+        fetchParticipantsForGames();
         localStorage.removeItem("team_id");
         localStorage.removeItem("game_id");
     }, []);
@@ -53,6 +73,30 @@ const Lobby = () => {
         const interval = setInterval(updateRemainingTime, 1000);
         return () => clearInterval(interval);
     });
+
+    useEffect(() => {
+        const fetchParticipantsForGames = async () => {
+            const updatedGames = await Promise.all(games.map(async (game) => {
+                const q = query(
+                    collection(db, "games", game.game_id, "users")
+                );
+
+                const querySnapshot = await getDocs(q);
+                const fetchedGameusers = querySnapshot.docs.map((doc) => doc.data().user_email);
+                console.log(fetchedGameusers.length);
+
+                return {
+                    ...game,
+                    participants: fetchedGameusers.length,
+                };
+            }));
+
+            setGames(updatedGames);
+        };
+
+        fetchParticipantsForGames();
+    }, []);
+
 
     const formatTime = (timeRemaining) => {
         const hours = Math.floor(timeRemaining / 3600000);
@@ -182,12 +226,12 @@ const Lobby = () => {
                             <Typography variant="body1" gutterBottom>
                                 Difficulty: {game.difficulty_level}
                             </Typography>
-                            {game.participants && (
+                            {game.participants > 0 && (
                                 <Typography variant="body1" gutterBottom>
                                     Participants: {game.participants}
                                 </Typography>
                             )}
-                            {game.timeRemaining && (
+                            {game.timeRemaining > 0 && (
                                 <Typography variant="body2" color="textSecondary" gutterBottom>
                                     Time Remaining: {formatTime(game.timeRemaining)}
                                 </Typography>

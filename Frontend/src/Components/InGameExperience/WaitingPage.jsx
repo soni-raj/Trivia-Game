@@ -45,6 +45,12 @@ const WaitingPage = () => {
       const interval = setInterval(() => {
         const currentTime = new Date();
         const remainingTime = startTime - currentTime;
+        if (remainingTime <= 0) {
+          console.log(remainingTime, game_id);
+          clearInterval(interval);
+          navigate("/game/" + game_id);
+          return;
+        }
         setTimeRemaining(remainingTime);
       }, 1000);
 
