@@ -1,6 +1,6 @@
-import { TRIVIA_GET_TEAMS_PER_USER } from '../../utils/apiUrls';
+import { GET_USER_TEAMS_BY_EMAIL } from '../../utils/apiUrls';
 
-const apiURL = TRIVIA_GET_TEAMS_PER_USER;
+const apiURL = GET_USER_TEAMS_BY_EMAIL;
 
 const fetchData = (url, method, body = null) => {
     const headers = {
@@ -10,9 +10,8 @@ const fetchData = (url, method, body = null) => {
     return fetch(url, {
         method,
         headers,
-        body: body ? JSON.stringify(body) : null,
-    })
-        .then((response) => response.json())
+        body: body ? JSON.stringify(body) : null
+    }).then((response) => response.json())
         .catch((error) => {
             console.error(error);
             return {};
@@ -24,14 +23,8 @@ export const getTeamsPerUser = (user_email) => {
 };
 
 export const storeGame = (game_id, user_email, team_id) => {
-    const params = "?game_id=" + game_id + "&user_email=" +user_email+"&team_id="+team_id;
+    const params = "?game_id=" + game_id + "&user_email=" + user_email + "&team_id=" + team_id;
     const url = "https://us-central1-big-depth-391317.cloudfunctions.net/generateGame" + params;
     console.log(game_id);
-    return fetchData(url, 'GET');
-}
-
-export const joinGame = (game_id, user_email, team_id) => {
-    const params = "?game_id=" + game_id + "&user_email=" +user_email+"&team_id="+team_id;
-    const url = "https://us-central1-big-depth-391317.cloudfunctions.net/joinGame" + params;
     return fetchData(url, 'GET');
 }

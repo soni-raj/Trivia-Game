@@ -4,7 +4,7 @@ import requests
 def fetch_team_data(team_id):
     team_api_url = "https://h26hqa9ooe.execute-api.us-east-1.amazonaws.com/get-team"
     try:
-        response = requests.get(team_api_url, json={"teamID": team_id})
+        response = requests.post(team_api_url, json={"teamID": team_id})
         team_data = response.json()
         return team_data.get('team')[0]
     except Exception as e:

@@ -21,8 +21,8 @@ import TeamStatistics from "./pages/teams/teamStatistics";
 import TeamManagement from "./pages/teams/manageTeam";
 import Games from "./Components/triviaManagement/GameManagement/Games";
 import Lobby from "./Components/gameLobby/Lobby";
-// import InGamePage from "./Components/InGameExperience/InGamePage";
-import ChatBox from "./Components/InGameExperience/ChatBox";
+import InGamePage from "./Components/InGameExperience/InGamePage";
+import WaitingPage from "./Components/InGameExperience/WaitingPage";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -49,13 +49,13 @@ root.render(
         {/* FEATURE 3: TEAM ROUTES */}
         <Route path="/user-teams" element={<UserTeams />} />
         <Route path="/team-statistics" element={<TeamStatistics />} />
-        <Route path="/team-management" element={<TeamManagement />} />
-        <Route exact path="/questions" element={<Questions />} />
-        <Route exact path="/admin" element={<Games />} />
-        <Route exact path="/lobby" element={<Lobby />} />
-        {/* <Route path="/game/:game_id" element={<InGamePage />} /> */}
-        <Route exact path="/chat" element={<ChatBox />} />
+        <Route path="/team-management" element={<Route TeamManagement />} />
       </Route>
+      <Route exact path="/questions" element={<Questions />} />
+      <Route exact path="/admin" element={<Games />} />
+      <Route exact path="/lobby" element={<Lobby />} />
+      <Route path="/game/" element={<WaitingPage/>}/>
+      <Route path="/game/:game_id" element={<InGamePage/>}/>
     </Routes>
   </BrowserRouter>
 );
