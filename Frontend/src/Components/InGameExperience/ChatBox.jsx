@@ -3,21 +3,17 @@ import { db } from "../../utils/firebase";
 import {
   addDoc,
   collection,
-  doc,
   onSnapshot,
   orderBy,
   query,
   limit,
   serverTimestamp,
 } from "firebase/firestore";
-import { Container, TextField, Button, Paper } from "@mui/material";
+import { Container, TextField, Button, Paper, Box } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import ChatBubble from "./ChatBubble";
 
-// const ChatBox = ({ game_id, team_id }) => {
-const ChatBox = () => {
-  const game_id = '3445e433-e26a-4930-a86a-f0b4f6e246f1';
-  const team_id = 'c38f9205-16dc-48fc-89ad-f1d49c3f57c8';
+const ChatBox = ({ game_id, team_id }) => {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
   const scroll = useRef();
@@ -55,6 +51,7 @@ const ChatBox = () => {
         text: message,
         name: user,
         createdAt: serverTimestamp(),
+        avatar: "https://i.pravatar.cc/150?u=" + user,
       }
     );
 
@@ -79,6 +76,8 @@ const ChatBox = () => {
           width: "100%",
           overflowY: "auto",
           padding: "10px",
+          borderRadius: "10px",
+          boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
         }}
       >
         {messages.map((message) => (
@@ -86,7 +85,8 @@ const ChatBox = () => {
         ))}
         <span ref={scroll}></span>
       </Paper>
-      <form
+      <Box
+        component="form"
         onSubmit={sendMessage}
         sx={{
           display: "flex",
@@ -100,6 +100,7 @@ const ChatBox = () => {
           fullWidth
           value={message}
           onChange={(e) => setMessage(e.target.value)}
+          sx={{ marginRight: "10px" }}
         />
         <Button
           type="submit"
@@ -109,7 +110,7 @@ const ChatBox = () => {
         >
           Send
         </Button>
-      </form>
+      </Box>
     </Container>
   );
 };

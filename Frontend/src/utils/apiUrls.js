@@ -66,11 +66,7 @@ export const TRIVIA_GET_USER_DETAIL =
 export const TRIVIA_GET_ALL_USERS =
   "https://c9zptyvpv7.execute-api.us-east-1.amazonaws.com/default/triviaGetAllUsersData";
 
-export const TRIVIA_CONTENT_MANAGEMENT =
-  "https://a42hfubjdc.execute-api.us-east-1.amazonaws.com/prod";
-
-export const TRIVIA_GET_TEAMS_PER_USER =
-  "https://s5z3dlayhe.execute-api.us-east-1.amazonaws.com/t1/user-teams";
+export const TRIVIA_CONTENT_MANAGEMENT = "https://a42hfubjdc.execute-api.us-east-1.amazonaws.com/prod";
 
 // FEATURE 3: TEAM MANAGEMENT APIs
 
