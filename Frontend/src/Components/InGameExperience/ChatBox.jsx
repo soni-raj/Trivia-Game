@@ -3,7 +3,6 @@ import { db } from "../../utils/firebase";
 import {
   addDoc,
   collection,
-  doc,
   onSnapshot,
   orderBy,
   query,
@@ -14,10 +13,10 @@ import { Container, TextField, Button, Paper } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import ChatBubble from "./ChatBubble";
 
-// const ChatBox = ({ game_id, team_id }) => {
-const ChatBox = () => {
-  const game_id = '3445e433-e26a-4930-a86a-f0b4f6e246f1';
-  const team_id = 'c38f9205-16dc-48fc-89ad-f1d49c3f57c8';
+const ChatBox = ({ game_id, team_id }) => {
+// const ChatBox = () => {
+  // const game_id = '3445e433-e26a-4930-a86a-f0b4f6e246f1';
+  // const team_id = 'c38f9205-16dc-48fc-89ad-f1d49c3f57c8';
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
   const scroll = useRef();

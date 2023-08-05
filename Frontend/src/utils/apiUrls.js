@@ -66,24 +66,15 @@ export const TRIVIA_GET_USER_DETAIL =
 export const TRIVIA_GET_ALL_USERS =
   "https://c9zptyvpv7.execute-api.us-east-1.amazonaws.com/default/triviaGetAllUsersData";
 
-  export const TRIVIA_CONTENT_MANAGEMENT = "https://a42hfubjdc.execute-api.us-east-1.amazonaws.com/prod";
-  
-  export const TRIVIA_GET_TEAMS_PER_USER = "https://s5z3dlayhe.execute-api.us-east-1.amazonaws.com/t1/user-teams";
+export const TRIVIA_CONTENT_MANAGEMENT = "https://a42hfubjdc.execute-api.us-east-1.amazonaws.com/prod";
 
 // FEATURE 3: TEAM MANAGEMENT APIs
 
 export const GET_USER_TEAMS_BY_EMAIL = "https://s5z3dlayhe.execute-api.us-east-1.amazonaws.com/t1/user-teams";
 export const CREATE_TEAM = "https://aeka0y8sci.execute-api.us-east-1.amazonaws.com/t1/create-team";
-export const REMOVE_TEAM_MEMBER ="https://g12mymqu00.execute-api.us-east-1.amazonaws.com/t1/remove-member";
-export const INVITE_TEAM_MEMBER ="https://43oo1kgp3b.execute-api.us-east-1.amazonaws.com/t1/inviteteammember";
-export const UPDATE_TEAM_MEMBER_ROLE ="https://9m5y4kp37i.execute-api.us-east-1.amazonaws.com/t1/update-member-role";
+export const REMOVE_TEAM_MEMBER = "https://g12mymqu00.execute-api.us-east-1.amazonaws.com/t1/remove-member";
+export const INVITE_TEAM_MEMBER = "https://43oo1kgp3b.execute-api.us-east-1.amazonaws.com/t1/inviteteammember";
+export const UPDATE_TEAM_MEMBER_ROLE = "https://9m5y4kp37i.execute-api.us-east-1.amazonaws.com/t1/update-member-role";
 export const UPDATE_TEAM_BY_TEAM_ID = "https://j3nw67updb.execute-api.us-east-1.amazonaws.com/update-team";
 
 export const GET_TEAM_BY_TEAM_ID = "https://h26hqa9ooe.execute-api.us-east-1.amazonaws.com/get-team";
-
-
-
-
-
-
-

@@ -3,6 +3,8 @@ import { getGames } from '../triviaManagement/GameManagement/GameService';
 import { getTeamsPerUser, storeGame } from './LobbyService';
 import { Box, Container, Typography, Grid, Select, MenuItem, FormControl, InputLabel, Button, Dialog, DialogTitle, DialogContent, DialogActions, List, ListItem, ListItemText, ListItemButton } from '@mui/material';
 import { useNavigate } from "react-router-dom";
+import { db } from "../../utils/firebase";
+import { doc, getDoc } from "firebase/firestore";
 
 const Lobby = () => {
     const [games, setGames] = useState([]);
@@ -16,7 +18,6 @@ const Lobby = () => {
     const [teams, setTeams] = useState([]);
     const [selectedGameId, setSelectedGameId] = useState(null);
     const navigate = useNavigate();
-
 
     const calculateTimeRemaining = (datetime) => {
         const now = new Date();
@@ -44,7 +45,8 @@ const Lobby = () => {
             }
         };
         fetchGames();
-
+        localStorage.removeItem("team_id");
+        localStorage.removeItem("game_id");
     }, []);
 
     useEffect(() => {
@@ -89,9 +91,18 @@ const Lobby = () => {
         console.log(`Joining Team with ID: ${teamId}`);
         console.log(selectedGameId);
         const currentUserEmail = localStorage.getItem("email");
-        await storeGame(selectedGameId, currentUserEmail, teamId);
+
+        const gameRef = doc(db, "games", selectedGameId, "teams", teamId);
+        const docSnap = await getDoc(gameRef);
+        if (docSnap.exists()) {
+            console.log("Document data:", docSnap.data());
+        } else {
+            await storeGame(selectedGameId, currentUserEmail, teamId);
+        }
         setOpenTeamsModal(false);
-        navigate("/game/" + selectedGameId);
+        localStorage.setItem("team_id", teamId);
+        localStorage.setItem("game_id", selectedGameId);
+        navigate("/game");
     };
 
     return (
