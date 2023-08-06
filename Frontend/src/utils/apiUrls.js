@@ -87,3 +87,12 @@ export const GET_TEAM_BY_TEAM_ID =
   "https://h26hqa9ooe.execute-api.us-east-1.amazonaws.com/get-team";
 export const SUBSCRIBE_EMAIL =
   "https://wb6tyr72mb.execute-api.us-east-1.amazonaws.com/default/triviaConfirmEmail";
+
+// FEATURE 6: LEADERBOARD APIs
+
+export const GET_LEADERBOARD_DATA_API = 
+'https://cy6at42lf6.execute-api.us-east-1.amazonaws.com/getLeaderboardData';
+export const GET_TOP_PERFORMING_PLAYERS_API = 
+"https://cy6at42lf6.execute-api.us-east-1.amazonaws.com/getTopPerformingPlayer";
+export const GET_TOP_PERFORMING_TEAMS_API = 
+"https://cy6at42lf6.execute-api.us-east-1.amazonaws.com/getTopPerformingTeams";

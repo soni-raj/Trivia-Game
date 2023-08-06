@@ -10,6 +10,7 @@ import RegisterPage from "./pages/register/registerPage";
 import RegisterSecurityQuestionPage from "./pages/register/securityQuestions/registerSecurityQuestionsPage";
 import EditProfilePage from "./pages/editProfile/editProfilePage";
 import ForgotPasswordPage from "./pages/forgotPassword/forgotPassword";
+import LeaderboardPage from "./pages/leaderBoard/LeaderboardPage";
 
 // import ConfirmOtpPage from "./pages/forgotPassword/forgotPasswordOtp/otpPage";
 import App from "./app";
@@ -50,6 +51,9 @@ root.render(
         <Route path="/user-teams" element={<UserTeams />} />
         <Route path="/team-statistics" element={<TeamStatistics />} />
         <Route path="/team-management" element={<Route TeamManagement />} />
+
+         {/* FEATURE 6: LEADERBOARD ROUTE */}
+         <Route path="/leaderboard" element={<LeaderboardPage />} />
       </Route>
       <Route exact path="/questions" element={<Questions />} />
       <Route exact path="/admin" element={<Games />} />
