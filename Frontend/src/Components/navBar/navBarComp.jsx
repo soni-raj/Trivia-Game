@@ -115,6 +115,13 @@ export default function Navbar() {
                   </Button>
                 </>
               )}
+              {isUserLoggedIn && user === 'admin@game.com' && (
+                <>
+                  <Button href="/leaderboard" variant="text" color="secondary">
+                    Leaderboard
+                  </Button>
+                </>
+              )}
               {isUserLoggedIn && (
                 <Button onClick={handleLogout} variant="text" color="secondary">
                   Logout
