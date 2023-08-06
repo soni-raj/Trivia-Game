@@ -17,6 +17,7 @@ function RegisterSecurityQuestion() {
   const navigate = useNavigate();
   const [answer1, setAnswer1] = useState("");
   const [answer2, setAnswer2] = useState("");
+  const [answer3, setAnswer3] = useState("");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const email = location.state.email;
@@ -33,6 +34,7 @@ function RegisterSecurityQuestion() {
         email: email,
         ans1: answer1,
         ans2: answer2,
+        ans3: answer3,
       })
       .then((res) => {
         axios
@@ -101,6 +103,19 @@ function RegisterSecurityQuestion() {
               autoFocus
               value={answer2}
               onChange={(event) => setAnswer2(event.target.value)}
+            />
+
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              label="Q3. Please provide a Random Number ?"
+              name="q3"
+              type="q3"
+              autoComplete="q3"
+              autoFocus
+              value={answer2}
+              onChange={(event) => setAnswer3(event.target.value)}
             />
 
             <Button

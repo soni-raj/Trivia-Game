@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import GameForm from './GameForm';
-import { getGames, updateGame, deleteGame, addGame } from './GameService';
+import React, { useState, useEffect } from "react";
+import GameForm from "./GameForm";
+import { getGames, updateGame, deleteGame, addGame } from "./GameService";
 
 const Games = () => {
   const [games, setGames] = useState([]);
@@ -14,21 +14,21 @@ const Games = () => {
       const gamesData = await getGames();
       setGames(gamesData);
     } catch (error) {
-      console.error('Error fetching games:', error);
+      console.error("Error fetching games:", error);
     }
   };
 
   const handleAddGame = async (gameData) => {
     try {
       console.log(gameData);
-      if(gameData.game_id){
+      if (gameData.game_id) {
         await updateGame(gameData);
       } else {
         await addGame(gameData);
       }
       fetchGames();
     } catch (error) {
-      console.error('Error adding game:', error);
+      console.error("Error adding game:", error);
     }
   };
 
@@ -38,13 +38,12 @@ const Games = () => {
       await deleteGame(gameId);
       fetchGames();
     } catch (error) {
-      console.error('Error deleting game:', error);
+      console.error("Error deleting game:", error);
     }
   };
 
   return (
     <div>
-      <h1>Trivia Games</h1>
       <GameForm
         games={games}
         onSave={handleAddGame}

@@ -79,7 +79,7 @@ export default function Navbar() {
                 Trivia Game
               </Link>
             </Typography>
-            {isUserLoggedIn && (
+            {isUserLoggedIn && user !== "admin@game.com" && (
               <Button
                 sx={{
                   "padding-bottom": "0px",
@@ -105,7 +105,7 @@ export default function Navbar() {
                   </Button>
                 </>
               )}
-              {isUserLoggedIn && user === 'admin@game.com' && (
+              {isUserLoggedIn && user === "admin@game.com" && (
                 <>
                   <Button href="/admin" variant="text" color="secondary">
                     Game Management
@@ -120,7 +120,7 @@ export default function Navbar() {
                   Logout
                 </Button>
               )}
-              {isUserLoggedIn && (
+              {/* {isUserLoggedIn && (
                 <IconButton
                   size="large"
                   aria-label="show 17 new notifications"
@@ -130,7 +130,7 @@ export default function Navbar() {
                     <NotificationsIcon color="secondary" />
                   </Badge>
                 </IconButton>
-              )}
+              )} */}
 
               {isUserLoggedIn && (
                 <IconButton
