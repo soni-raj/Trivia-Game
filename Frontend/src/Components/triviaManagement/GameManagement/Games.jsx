@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import GameForm from './GameForm';
-import { getGames, updateGame, deleteGame, addGame } from './GameService';
-import Loader from '../../../loader';
+import React, { useState, useEffect } from "react";
+import GameForm from "./GameForm";
+import { getGames, updateGame, deleteGame, addGame } from "./GameService";
+import Loader from "../../../loader";
 
 const Games = () => {
   const [games, setGames] = useState([]);
@@ -29,7 +29,7 @@ const Games = () => {
       hideLoader();
       setGames(gamesData);
     } catch (error) {
-      console.error('Error fetching games:', error);
+      console.error("Error fetching games:", error);
     }
   };
 
@@ -47,7 +47,7 @@ const Games = () => {
       }
       fetchGames();
     } catch (error) {
-      console.error('Error adding game:', error);
+      console.error("Error adding game:", error);
     }
   };
 
@@ -59,7 +59,7 @@ const Games = () => {
       hideLoader();
       fetchGames();
     } catch (error) {
-      console.error('Error deleting game:', error);
+      console.error("Error deleting game:", error);
     }
   };
 

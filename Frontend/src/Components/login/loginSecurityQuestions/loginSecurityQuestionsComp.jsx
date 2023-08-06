@@ -26,8 +26,12 @@ export default function LoginSecurityQuestionsComp() {
   const [q2, SetQ2] = React.useState(
     "Q2. Please provide your favorite food name ?"
   );
+  const [q3, SetQ3] = React.useState(
+    "Q3. Please provide your entered Random number ?"
+  );
   const [a1, SetA1] = React.useState("");
   const [a2, SetA2] = React.useState("");
+  const [a3, SetA3] = React.useState("");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const location = useLocation();
@@ -46,8 +50,6 @@ export default function LoginSecurityQuestionsComp() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    console.log(a1);
-    console.log(a2);
     try {
       const url = TRIVIA_CHECK_QNA;
 
@@ -55,6 +57,7 @@ export default function LoginSecurityQuestionsComp() {
         email: email,
         userAns1: a1,
         userAns2: a2,
+        userAns3: a3,
       });
       console.log(response.status == 200);
       if (response.status == 200) {
@@ -131,6 +134,24 @@ export default function LoginSecurityQuestionsComp() {
                 SetA2(event.target.value);
               }}
             />
+
+            <Typography variant="subtitle2" gutterBottom component="div">
+              {q3}
+            </Typography>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="answer2"
+              label="Answer"
+              name="answer2"
+              autoFocus
+              value={a3}
+              onChange={(event) => {
+                SetA3(event.target.value);
+              }}
+            />
+
             <Button
               type="submit"
               fullWidth

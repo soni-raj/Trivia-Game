@@ -1,7 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import QuestionListForm from './QuestionListForm';
-import { getQuestions, addQuestion, deleteQuestion, updateQuestion } from './QuestionService';
-import Loader from '../../../loader';
+import React, { useState, useEffect } from "react";
+import QuestionListForm from "./QuestionListForm";
+import {
+  getQuestions,
+  addQuestion,
+  deleteQuestion,
+  updateQuestion,
+} from "./QuestionService";
+import Loader from "../../../loader";
 
 const Questions = () => {
   const [questions, setQuestions] = useState([]);
@@ -29,14 +34,14 @@ const Questions = () => {
       hideLoader();
       setQuestions(questionsData);
     } catch (error) {
-      console.error('Error fetching questions:', error);
+      console.error("Error fetching questions:", error);
     }
   };
 
   const handleAddQuestion = async (questionData) => {
     try {
       console.log(questionData);
-      if(questionData.question_id){
+      if (questionData.question_id) {
         showLoader("Updating Question...");
         await updateQuestion(questionData);
         hideLoader();
@@ -47,7 +52,7 @@ const Questions = () => {
       }
       fetchQuestions();
     } catch (error) {
-      console.error('Error adding question:', error);
+      console.error("Error adding question:", error);
     }
   };
 
@@ -59,7 +64,7 @@ const Questions = () => {
       hideLoader();
       fetchQuestions();
     } catch (error) {
-      console.error('Error deleting question:', error);
+      console.error("Error deleting question:", error);
     }
   };
 
