@@ -16,7 +16,13 @@ def fetch_questions_data(category, difficulty_level, num_questions):
     try:
         response = requests.get(questions_api_url)
         questions_data = response.json()
-        return questions_data
+        if questions_data:
+            return questions_data
+        else:
+            questions_api_url = f"https://a42hfubjdc.execute-api.us-east-1.amazonaws.com/prod/questions?category={category}&num_questions={num_questions}"
+            response = requests.get(questions_api_url)
+            questions_data = response.json()
+            return questions_data
     except Exception as e:
         print(f"Error fetching questions data: {e}")
         return None
@@ -57,10 +63,10 @@ def store_data(request):
                     "Access-Control-Max-Age": "3600",
                 }
 
-                return (join_game_data, 204, headers)
+                return join_game_data, 204, headers
 
             headers = {"Access-Control-Allow-Origin": "*"}
-            return (join_game_data, 204, headers)
+            return join_game_data, 204, headers
         else:
              return "Error joining Game."
     else:

@@ -3,6 +3,9 @@ import { getGames } from '../triviaManagement/GameManagement/GameService';
 import { getTeamsPerUser, storeGame } from './LobbyService';
 import { Box, Container, Typography, Grid, Select, MenuItem, FormControl, InputLabel, Button, Dialog, DialogTitle, DialogContent, DialogActions, List, ListItem, ListItemText, ListItemButton } from '@mui/material';
 import { useNavigate } from "react-router-dom";
+import { db } from "../../utils/firebase";
+import { doc, getDoc, query, collection, getDocs } from "firebase/firestore";
+import Loader from '../../loader';
 
 const Lobby = () => {
     const [games, setGames] = useState([]);
@@ -16,7 +19,18 @@ const Lobby = () => {
     const [teams, setTeams] = useState([]);
     const [selectedGameId, setSelectedGameId] = useState(null);
     const navigate = useNavigate();
+    const [isLoading, setLoading] = useState(false);
+    const [loadingMessage, setLoadingMessage] = useState("");
 
+    const showLoader = (message) => {
+        setLoading(true);
+        setLoadingMessage(message);
+    };
+
+    const hideLoader = () => {
+        setLoading(false);
+        setLoadingMessage("");
+    };
 
     const calculateTimeRemaining = (datetime) => {
         const now = new Date();
@@ -33,18 +47,37 @@ const Lobby = () => {
         setGames(updatedGames);
     };
 
-    useEffect(() => {
-        const fetchGames = async () => {
-            try {
-                const gamesData = await getGames();
-                setGames(gamesData);
-                populateCategoriesAndDifficultyLevels(gamesData);
-            } catch (error) {
-                console.error('Error fetching games:', error);
-            }
-        };
-        fetchGames();
+    const fetchGames = async () => {
+        try {
+            showLoader("Fetching Trivia Games...");
+            const gamesData = await getGames();
+            setGames(gamesData);
+            hideLoader();
+            populateCategoriesAndDifficultyLevels(gamesData);
+            fetchParticipantsForGames(gamesData);
+        } catch (error) {
+            console.error('Error fetching games:', error);
+        }
+    };
+    const fetchParticipantsForGames = async (gamesData) => {
+        const updatedGames = await Promise.all(gamesData.map(async (game) => {
+            const q = query(
+                collection(db, "games", game.game_id, "users")
+            );
+            const querySnapshot = await getDocs(q);
+            const fetchedGameusers = querySnapshot.docs.map((doc) => doc.data().user_email);
+            return {
+                ...game,
+                participants: fetchedGameusers.length,
+            };
+        }));
 
+        setGames(updatedGames);
+    };
+    useEffect(() => {
+        fetchGames();
+        localStorage.removeItem("team_id");
+        localStorage.removeItem("game_id");
     }, []);
 
     useEffect(() => {
@@ -80,7 +113,9 @@ const Lobby = () => {
     const startGame = async (game_id) => {
         setSelectedGameId(game_id);
         const currentUser = localStorage.getItem("email");
+        showLoader("Fetching Teams");
         const teamData = await getTeamsPerUser(currentUser);
+        hideLoader();
         setTeams(teamData);
         setOpenTeamsModal(true);
     };
@@ -89,13 +124,25 @@ const Lobby = () => {
         console.log(`Joining Team with ID: ${teamId}`);
         console.log(selectedGameId);
         const currentUserEmail = localStorage.getItem("email");
-        await storeGame(selectedGameId, currentUserEmail, teamId);
+
+        const gameRef = doc(db, "games", selectedGameId, "teams", teamId);
+        const docSnap = await getDoc(gameRef);
+        if (docSnap.exists()) {
+            console.log("Document data:", docSnap.data());
+        } else {
+            showLoader("Joining Games...");
+            await storeGame(selectedGameId, currentUserEmail, teamId);
+            hideLoader();
+        }
         setOpenTeamsModal(false);
-        navigate("/game/" + selectedGameId);
+        localStorage.setItem("team_id", teamId);
+        localStorage.setItem("game_id", selectedGameId);
+        navigate("/game");
     };
 
     return (
         <Container>
+            {isLoading && <Loader open={isLoading} message={loadingMessage} />}
             <Box my={4}>
                 <Typography variant="h4" component="h1" align="center" gutterBottom>
                     Trivia Game Lobby
@@ -171,12 +218,12 @@ const Lobby = () => {
                             <Typography variant="body1" gutterBottom>
                                 Difficulty: {game.difficulty_level}
                             </Typography>
-                            {game.participants && (
+                            {game.participants > 0 && (
                                 <Typography variant="body1" gutterBottom>
                                     Participants: {game.participants}
                                 </Typography>
                             )}
-                            {game.timeRemaining && (
+                            {game.timeRemaining > 0 && (
                                 <Typography variant="body2" color="textSecondary" gutterBottom>
                                     Time Remaining: {formatTime(game.timeRemaining)}
                                 </Typography>
