@@ -2,7 +2,7 @@ import ReactDOM from "react-dom/client";
 import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-
+import { PrivateRoute } from "./utils/privateRoutes";
 import LoginPage from "./pages/login/loginPage";
 import LoginCheckSecurityQuestionPage from "./pages/login/loginSecurityQuestions/loginSecurityQuestionsPage.jsx";
 
@@ -36,30 +36,115 @@ root.render(
           element={<LoginCheckSecurityQuestionPage />}
         />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/editprofile" element={<EditProfilePage />} />
+        <Route
+          path="/editprofile"
+          element={
+            <PrivateRoute>
+              <EditProfilePage />
+            </PrivateRoute>
+          }
+        />
         <Route
           path="/registersecurityquestion"
-          element={<RegisterSecurityQuestionPage />}
+          element={
+            <PrivateRoute>
+              <RegisterSecurityQuestionPage />
+            </PrivateRoute>
+          }
         />
         <Route path="/forgotpassword" element={<ForgotPasswordPage />} />
         {/* Updated component name */}
         {/* <Route path="/confirmotp" element={<ConfirmOtpPage />} /> */}
 
-        <Route exact path="/questions" element={<Questions />} />
+        <Route
+          exact
+          path="/questions"
+          element={
+            <PrivateRoute>
+              <Questions />
+            </PrivateRoute>
+          }
+        />
 
         {/* FEATURE 3: TEAM ROUTES */}
-        <Route path="/user-teams" element={<UserTeams />} />
-        <Route path="/team-statistics" element={<TeamStatistics />} />
-        <Route path="/team-management" element={<Route TeamManagement />} />
+        <Route
+          path="/user-teams"
+          element={
+            <PrivateRoute>
+              <UserTeams />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/team-statistics"
+          element={
+            <PrivateRoute>
+              <TeamStatistics />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/team-management"
+          element={
+            <PrivateRoute>
+              <TeamManagement />
+            </PrivateRoute>
+          }
+        />
 
-         {/* FEATURE 6: LEADERBOARD ROUTE */}
-         <Route path="/leaderboard" element={<Leaderboard />} />
+        {/* FEATURE 6: LEADERBOARD ROUTE */}
+        <Route
+          path="/leaderboard"
+          element={
+            <PrivateRoute>
+              <Leaderboard />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          exact
+          path="/questions"
+          element={
+            <PrivateRoute>
+              <Questions />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          exact
+          path="/admin"
+          element={
+            <PrivateRoute>
+              <Games />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          exact
+          path="/lobby"
+          element={
+            <PrivateRoute>
+              <Lobby />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/game/"
+          element={
+            <PrivateRoute>
+              <WaitingPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/game/:game_id"
+          element={
+            <PrivateRoute>
+              <InGamePage />
+            </PrivateRoute>
+          }
+        />
       </Route>
-      <Route exact path="/questions" element={<Questions />} />
-      <Route exact path="/admin" element={<Games />} />
-      <Route exact path="/lobby" element={<Lobby />} />
-      <Route path="/game/" element={<WaitingPage/>}/>
-      <Route path="/game/:game_id" element={<InGamePage/>}/>
     </Routes>
   </BrowserRouter>
 );

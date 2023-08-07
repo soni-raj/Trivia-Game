@@ -114,7 +114,7 @@ function RegisterSecurityQuestion() {
               type="q3"
               autoComplete="q3"
               autoFocus
-              value={answer2}
+              value={answer3}
               onChange={(event) => setAnswer3(event.target.value)}
             />
 

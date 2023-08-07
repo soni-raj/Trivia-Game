@@ -339,12 +339,12 @@ export default function LoginFormComp() {
       >
         Submit
       </Button>
-      <h4>
+      <h6>
         Not Registered? <a href="/register">Register </a>
-      </h4>
-      <h4>
+      </h6>
+      <h6>
         <a href="/forgotpassword">Forgot Password?</a>
-      </h4>
+      </h6>
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={3000}

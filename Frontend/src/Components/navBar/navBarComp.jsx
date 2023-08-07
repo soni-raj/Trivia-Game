@@ -76,7 +76,7 @@ export default function Navbar() {
           <Toolbar>
             <Typography variant="h6" noWrap component="div" color="secondary">
               <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
-                Trivia Game
+                Trivia Titans
               </Link>
             </Typography>
             {isUserLoggedIn && user !== "admin@game.com" && (
@@ -90,6 +90,20 @@ export default function Navbar() {
                 color="secondary"
               >
                 My Teams
+              </Button>
+            )}
+
+            {isUserLoggedIn && user !== "admin@game.com" && (
+              <Button
+                sx={{
+                  "padding-bottom": "0px",
+                  "padding-left": "15px",
+                }}
+                href="/lobby"
+                variant="text"
+                color="secondary"
+              >
+                Game Lobby
               </Button>
             )}
 
@@ -115,7 +129,7 @@ export default function Navbar() {
                   </Button>
                 </>
               )}
-              {isUserLoggedIn && user === 'admin@game.com' && (
+              {isUserLoggedIn && user === "admin@game.com" && (
                 <>
                   <Button href="/leaderboard" variant="text" color="secondary">
                     Leaderboard

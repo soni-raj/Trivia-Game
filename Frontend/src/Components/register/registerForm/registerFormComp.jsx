@@ -423,9 +423,9 @@ export default function RegisterFormComp() {
       >
         Submit
       </Button>
-      <h4>
+      <h6>
         Already Registered? <a href="/login">Login</a>
-      </h4>
+      </h6>
     </Box>
   );
 }
