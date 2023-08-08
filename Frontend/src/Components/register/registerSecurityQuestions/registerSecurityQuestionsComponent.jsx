@@ -43,8 +43,8 @@ function RegisterSecurityQuestion() {
           })
           .then((res) => {
             handleSnackbarOpen("Success Please Confirm your Email!");
-            localStorage.setItem("email", email);
-            setTimeout(() => navigate("/"), 2000);
+
+            setTimeout(() => navigate("/login"), 2000);
           });
       })
       .catch((err) => {
