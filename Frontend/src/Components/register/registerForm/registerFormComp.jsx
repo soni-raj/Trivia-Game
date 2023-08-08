@@ -158,7 +158,7 @@ export default function RegisterFormComp() {
             }
           })
           .catch((error) => {
-            localStorage.setItem("email", email);
+            // localStorage.setItem("email", email);
             setTimeout(
               () =>
                 navigate("/registersecurityquestion", {
