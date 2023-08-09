@@ -128,9 +128,9 @@ export default function EditProfileComp() {
     loadUserImage();
 
     axios
-      .post(GET_USER_TEAMS_BY_EMAIL, currentUser)
+      .post(GET_USER_TEAMS_BY_EMAIL, { email: currentUser })
       .then((response) => {
-        const teams = response.data;
+        const teams = response.data.teams;
         setTeamAffiliations(teams);
       })
       .catch((error) => console.error("Error:", error));
@@ -428,9 +428,10 @@ export default function EditProfileComp() {
               >
                 {teamAffiliations.map((item, index) => (
                   <MenuItem key={index} onClick={handleClose}>
-                    {item}
+                    {item.team_name}
                   </MenuItem>
                 ))}
+
                 {/* <MenuItem onClick={handleClose}>Team 1</MenuItem>
                 <MenuItem onClick={handleClose}>Team 2</MenuItem>
                 <MenuItem onClick={handleClose}>Team 3</MenuItem> */}
