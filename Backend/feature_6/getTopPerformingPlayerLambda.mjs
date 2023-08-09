@@ -32,7 +32,6 @@ export const handler = async (event, context) => {
       });
     });
 
-    // Sort player data by score in descending order
     const sortedPlayerData = Object.values(playerData).sort((a, b) => b.user_score - a.user_score);
 
     return {
