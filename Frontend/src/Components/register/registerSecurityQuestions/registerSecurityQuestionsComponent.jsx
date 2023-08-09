@@ -44,7 +44,7 @@ function RegisterSecurityQuestion() {
           .then((res) => {
             handleSnackbarOpen("Success Please Confirm your Email!");
             localStorage.setItem("email", email);
-            setTimeout(() => navigate("/"), 2000);
+            setTimeout(() => navigate("/lobby"), 2000);
           });
       })
       .catch((err) => {

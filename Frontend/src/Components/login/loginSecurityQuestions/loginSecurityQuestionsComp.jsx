@@ -65,7 +65,7 @@ export default function LoginSecurityQuestionsComp() {
           "success 2 Step Authentication Successful. Redirecting..."
         );
         localStorage.setItem("email", email);
-        setTimeout(() => navigate("/"), 2000);
+        setTimeout(() => navigate("/lobby"), 2000);
       } else {
         handleSnackbarOpen(
           "failed Provided answers are wrong. Please check again"
